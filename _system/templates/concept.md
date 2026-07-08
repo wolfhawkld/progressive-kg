@@ -59,4 +59,5 @@ sources: []
 
 ## 参考资料
 
-- 
+- [[raw/human_ai_knowledge/filename.md]] | [🌐 HTML](https://wolfhawkld.github.io/human_ai_knowledge/filename.html) — 人机知识来源
+- [[raw/human_ai_knowledge/filename.md]] — 其他本地来源

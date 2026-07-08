@@ -218,6 +218,20 @@ sources:                              # Level 3 的原始素材来源
 5. **关系网络**：放在正文末尾，集中列出 `[[双链]]`
 6. **参考资料**：链接到 raw/ 目录的原始素材
 
+### 参考资料链接格式
+
+来自 human_ai_knowledge 的源文件同时提供本地 MD 链接和 GitHub Pages HTML 链接：
+
+```markdown
+- [[raw/human_ai_knowledge/filename.md]] | [🌐 HTML](https://wolfhawkld.github.io/human_ai_knowledge/filename.html) — 说明文字
+```
+
+仅本地有 MD 文件（如 2nd_brain 源文件）的只放 wikilink：
+
+```markdown
+- [[raw/human_ai_knowledge/filename.md]] — 说明文字
+```
+
 ### 何时拆分为独立文件
 
 当一个 Level 2 子主题满足以下任一条件时，应拆为独立文件：
