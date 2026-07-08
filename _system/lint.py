@@ -50,11 +50,12 @@ def extract_wikilinks(content: str) -> list[str]:
 def find_md_files(vault: Path) -> list[Path]:
     """Find all .md files excluding _system/, .obsidian/, and top-level system files."""
     skip_top_level = {"SCHEMA.md", "home.md", "log.md"}
+    skip_dirs = {"_system", ".obsidian", "raw"}
     files = []
     for p in vault.rglob("*.md"):
         rel = p.relative_to(vault)
         parts = rel.parts
-        if parts[0] in ("_system", ".obsidian"):
+        if parts[0] in skip_dirs:
             continue
         if str(rel) in skip_top_level:
             continue
