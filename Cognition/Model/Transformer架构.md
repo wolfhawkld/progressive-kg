@@ -4,7 +4,13 @@ summary: Transformer是一种基于自注意力机制的架构，摆脱了RNN的
 level: concept
 category: Cognition/Model
 tags: []
-related: [[注意力机制]], [[位置编码]], [[残差连接]], [[归一化层]], [[混合精度训练]], [[梯度消失与梯度爆炸]]]
+related:
+  - "[[注意力机制]]"
+  - "[[位置编码]]"
+  - "[[残差连接]]"
+  - "[[归一化层]]"
+  - "[[混合精度训练]]"
+  - "[[梯度消失与梯度爆炸]]"
 created: 2026-07-08
 last_verified: 2026-07-08
 confidence: medium

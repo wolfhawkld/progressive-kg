@@ -4,7 +4,13 @@ summary: RoPE 是一种把位置信息编码为“旋转”的 Transformer...
 level: concept
 category: Cognition/Model/关键机制
 tags: []
-related: [[位置编码]], [[Transformer架构]], [[注意力机制]], [[kv-cache]], [[flash-attention]], [[奇异值]]]
+related:
+  - "[[位置编码]]"
+  - "[[Transformer架构]]"
+  - "[[注意力机制]]"
+  - "[[kv-cache]]"
+  - "[[flash-attention]]"
+  - "[[奇异值]]"
 created: 2026-04-26
 last_verified: 2026-07-08
 confidence: medium

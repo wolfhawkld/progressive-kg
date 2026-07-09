@@ -4,7 +4,14 @@ summary: 一种专门为神经网络隐藏层2D参数（矩阵）设计的优化
 level: concept
 category: Cognition/Math/优化理论
 tags: []
-related: [[AdamW]], [[SGD-Momentum]], [[Newton-Schulz迭代]], [[谱范数]], [[正交矩阵]], [[Shampoo]], [[Moonlight]]]
+related:
+  - "[[AdamW]]"
+  - "[[SGD-Momentum]]"
+  - "[[Newton-Schulz迭代]]"
+  - "[[谱范数]]"
+  - "[[正交矩阵]]"
+  - "[[Shampoo]]"
+  - "[[Moonlight]]"
 created: 2026-04-21
 last_verified: 2026-07-08
 confidence: medium
