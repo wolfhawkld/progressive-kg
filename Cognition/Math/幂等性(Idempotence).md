@@ -1,6 +1,6 @@
 ---
 title: 幂等性（Idempotence）
-summary: "操作的重复执行不改变结果：$f(f(x)) = f(x)$。从数学的投影矩阵到 REST API..."
+summary: 操作的重复执行不改变结果：$f(f(x)) = f(x)$。从数学的投影矩阵到 REST API...
 level: concept
 category: Cognition/Math/逻辑与元数学
 tags: []

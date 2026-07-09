@@ -1,6 +1,6 @@
 ---
 title: RoPE（Rotary Position Embedding，旋转位置编码）
-summary: "RoPE 是一种把位置信息编码为“旋转”的 Transformer..."
+summary: RoPE 是一种把位置信息编码为“旋转”的 Transformer...
 level: concept
 category: Cognition/Model/关键机制
 tags: []

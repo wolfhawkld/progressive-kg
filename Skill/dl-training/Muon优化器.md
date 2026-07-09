@@ -1,6 +1,6 @@
 ---
 title: Muon Optimizer（Muon 优化器）
-summary: "一种专门为神经网络隐藏层2D参数（矩阵）设计的优化器，通过 Newton-Schulz..."
+summary: 一种专门为神经网络隐藏层2D参数（矩阵）设计的优化器，通过 Newton-Schulz...
 level: concept
 category: Cognition/Math/优化理论
 tags: []

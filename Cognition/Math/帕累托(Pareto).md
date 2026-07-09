@@ -1,6 +1,6 @@
 ---
 title: 帕累托（Pareto）
-summary: "意大利经济学家 Vilfredo Pareto（1848-1923）的三大贡献：80/20..."
+summary: 意大利经济学家 Vilfredo Pareto（1848-1923）的三大贡献：80/20...
 level: concept
 category: Cognition/Math/优化理论
 tags: []

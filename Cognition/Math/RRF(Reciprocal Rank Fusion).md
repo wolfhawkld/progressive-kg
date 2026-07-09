@@ -1,6 +1,6 @@
 ---
 title: RRF（Reciprocal Rank Fusion / 倒数排位融合）
-summary: "一种基于排名而非分数的多路检索结果融合算法——通过倒数加权，把不同检索系统产出的排序列表合并为统一排..."
+summary: 一种基于排名而非分数的多路检索结果融合算法——通过倒数加权，把不同检索系统产出的排序列表合并为统一排...
 level: concept
 category: Cognition/Math
 tags: []

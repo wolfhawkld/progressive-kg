@@ -1,6 +1,6 @@
 ---
 title: 主成分分析（Principal Component Analysis, PCA）
-summary: "最经典的线性降维方法。将高维数据投影到方差最大的方向上，用少数主成分保留尽可能多的信息。"
+summary: 最经典的线性降维方法。将高维数据投影到方差最大的方向上，用少数主成分保留尽可能多的信息。
 level: concept
 category: Cognition/Math
 tags: []

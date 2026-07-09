@@ -1,6 +1,6 @@
 ---
 title: Transformer架构
-summary: "Transformer是一种基于自注意力机制的架构，摆脱了RNN的序列依赖，实现完全并行计算。是现代..."
+summary: Transformer是一种基于自注意力机制的架构，摆脱了RNN的序列依赖，实现完全并行计算。是现代...
 level: concept
 category: Cognition/Model
 tags: []
