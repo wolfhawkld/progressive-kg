@@ -1,10 +1,10 @@
 ---
-title: "帕累托（Pareto）"
+title: 帕累托（Pareto）
 summary: "意大利经济学家 Vilfredo Pareto（1848-1923）的三大贡献：80/20..."
 level: concept
 category: Cognition/Math/优化理论
 tags: []
-related: [[[梯度下降优化]], [[均方误差]], [[超参数调优]], [[多任务学习]], [[正则化]], [[知识蒸馏]], [[模型量化]]]
+related: [[梯度下降优化]], [[均方误差]], [[超参数调优]], [[多任务学习]], [[正则化]], [[知识蒸馏]], [[模型量化]]]
 created: 2026-05-16
 last_verified: 2026-07-08
 confidence: medium

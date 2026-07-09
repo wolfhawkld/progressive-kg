@@ -1,10 +1,10 @@
 ---
-title: "幂等性（Idempotence）"
+title: 幂等性（Idempotence）
 summary: "操作的重复执行不改变结果：$f(f(x)) = f(x)$。从数学的投影矩阵到 REST API..."
 level: concept
 category: Cognition/Math/逻辑与元数学
 tags: []
-related: [[[标准化(Standardization)]], [[梯度下降优化]], [[均方误差]], [[自指]], [[正则化]]]
+related: [[标准化(Standardization)]], [[梯度下降优化]], [[均方误差]], [[自指]], [[正则化]]]
 created: 2026-05-23
 last_verified: 2026-07-08
 confidence: medium

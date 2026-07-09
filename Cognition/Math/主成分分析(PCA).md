@@ -1,10 +1,10 @@
 ---
-title: "主成分分析（Principal Component Analysis, PCA）"
+title: 主成分分析（Principal Component Analysis, PCA）
 summary: "最经典的线性降维方法。将高维数据投影到方差最大的方向上，用少数主成分保留尽可能多的信息。"
 level: concept
 category: Cognition/Math
 tags: []
-related: [[[奇异值]], [[标准化(Standardization)]], [[内积]], [[正交]], [[均方误差]], [[RRF(Reciprocal Rank Fusion)]]]
+related: [[奇异值]], [[标准化(Standardization)]], [[内积]], [[正交]], [[均方误差]], [[RRF(Reciprocal Rank Fusion)]]]
 created: 2026-05-21
 last_verified: 2026-07-08
 confidence: medium

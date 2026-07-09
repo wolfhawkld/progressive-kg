@@ -1,10 +1,10 @@
 ---
-title: "Flash Attention"
+title: Flash Attention
 summary: "Flash Attention 是一种高效的注意力计算算法，通过 代理值技巧 +..."
 level: concept
-category: uncategorized
+category: Cognition/Model
 tags: []
-related: [[[kv-cache]]]
+related: [[kv-cache]]]
 created: 2026-07-08
 last_verified: 2026-07-08
 confidence: medium

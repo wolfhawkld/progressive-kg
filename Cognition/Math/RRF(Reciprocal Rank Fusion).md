@@ -1,10 +1,10 @@
 ---
-title: "RRF（Reciprocal Rank Fusion / 倒数排位融合）"
+title: RRF（Reciprocal Rank Fusion / 倒数排位融合）
 summary: "一种基于排名而非分数的多路检索结果融合算法——通过倒数加权，把不同检索系统产出的排序列表合并为统一排..."
 level: concept
 category: Cognition/Math
 tags: []
-related: [[[BM25]], [[密集检索(Dense Retrieval)]], [[RAG(检索增强生成)]], [[交叉编码器(Cross-encoder)]], [[排序学习(Learning to Rank)]]]
+related: [[BM25]], [[密集检索(Dense Retrieval)]], [[RAG(检索增强生成)]], [[交叉编码器(Cross-encoder)]], [[排序学习(Learning to Rank)]]]
 created: 2026-04-29
 last_verified: 2026-07-08
 confidence: medium

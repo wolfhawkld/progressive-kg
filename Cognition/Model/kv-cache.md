@@ -1,8 +1,8 @@
 ---
-title: "KV Cache"
+title: KV Cache
 summary: "KV Cache（Key-Value Cache）是 LLM 推理时的缓存机制，存储已计算过的..."
 level: concept
-category: uncategorized
+category: Cognition/Model
 tags: []
 related: []
 created: 2026-07-08
