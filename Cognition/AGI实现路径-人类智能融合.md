@@ -1,6 +1,6 @@
 ---
 title: AGI 实现路径：人类智能融合
-summary: AGI 的实现路径之一，是通过建模人类行为模式（语言、行动等与世界的交互规律），让 Agent...
+summary: AGI 的实现路径之一：建模人类行为模式（语言、行动等与世界的交互规律），让 Agent 从模仿走向自主
 level: concept
 category: Cognition
 tags: []

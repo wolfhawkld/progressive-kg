@@ -1,11 +1,11 @@
 ---
 title: Flash Attention
-summary: Flash Attention 是一种高效的注意力计算算法，通过 代理值技巧 +...
+summary: 高效注意力计算算法，通过代理值技巧和分块计算减少 HBM 读写，加速训练和推理
 level: concept
 category: Cognition/Model
 tags: []
 related:
-  - "[[kv-cache]]"
+- '[[kv-cache]]'
 created: 2026-07-08
 last_verified: 2026-07-08
 confidence: medium

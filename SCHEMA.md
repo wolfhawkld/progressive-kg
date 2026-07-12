@@ -33,7 +33,7 @@ Level 1 — 定义层（一个概念 → 一句话定义 + 多个 Level 2 子主
 ### Level 1 — 定义层
 
 - **形态**：概念笔记文件的 frontmatter `summary` 字段 + 文件开头的 blockquote
-- **内容**：一句话定义（≤50 字），说清"是什么"
+- **内容**：一句话定义（目标 ≤50 字，允许 40-60 字），说清"是什么"，不能以省略号截断
 - **交互**：MOC 中通过 Dataview 渲染为表格行；Obsidian hover 预览自动显示
 - **一对多**：一个概念展开为多个 Level 2 子主题（`##` 标题）
 
@@ -120,7 +120,7 @@ progressive-kg/
 ```yaml
 ---
 title: 正交                          # 概念名（与文件名一致，不含 .md）
-summary: 两向量内积为零，方向独立互不影响  # Level 1：一句话定义（≤50字）
+summary: 两向量内积为零，方向独立互不影响  # Level 1：一句话定义（目标≤50字，允许40-60字，不可省略号截断）
 level: concept                        # 节点类型：concept | moc | raw | meta
 category: Cognition/Math              # 域/子域路径
 tags: [线性代数, 内积, 正交初始化]      # 标签（用于跨域聚类）

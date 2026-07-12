@@ -1,13 +1,13 @@
 ---
 title: MoE架构 (Mixture of Experts)
-summary: MoE（混合专家）通过稀疏激活实现模型容量与计算效率的平衡。在保持推理成本可控的同时，大幅扩展模型参...
+summary: 通过稀疏激活实现模型容量与计算效率的平衡，在推理成本可控下大幅扩展模型参数量
 level: concept
 category: Cognition/Model
 tags: []
 related:
-  - "[[Transformer架构]]"
-  - "[[分布式训练]]"
-  - "[[参数高效微调]]"
+- '[[Transformer架构]]'
+- '[[分布式训练]]'
+- '[[参数高效微调]]'
 created: 2026-07-08
 last_verified: 2026-07-08
 confidence: medium

@@ -1,16 +1,16 @@
 ---
 title: RoPE（Rotary Position Embedding，旋转位置编码）
-summary: RoPE 是一种把位置信息编码为“旋转”的 Transformer...
+summary: 把位置信息编码为旋转变换的位置编码方法，用于 Transformer 自注意力机制
 level: concept
 category: Cognition/Model/关键机制
 tags: []
 related:
-  - "[[位置编码]]"
-  - "[[Transformer架构]]"
-  - "[[注意力机制]]"
-  - "[[kv-cache]]"
-  - "[[flash-attention]]"
-  - "[[奇异值]]"
+- '[[位置编码]]'
+- '[[Transformer架构]]'
+- '[[注意力机制]]'
+- '[[kv-cache]]'
+- '[[flash-attention]]'
+- '[[奇异值]]'
 created: 2026-04-26
 last_verified: 2026-07-08
 confidence: medium
