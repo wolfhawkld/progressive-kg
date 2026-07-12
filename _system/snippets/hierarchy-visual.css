@@ -1,0 +1,101 @@
+/* Progressive-KG 层级视觉区分 —— 高对比版 */
+/* L2 强视觉：大色块背景 + 粗左侧色条 + 粗体 */
+/* L3 弱视觉：仅左侧细线 + 灰色，明显从属于 L2 */
+/* L1 引用框：蓝色主题，与正文明确区分 */
+
+/* ===== Level 2 标题 (##) ===== */
+/* 深色主题 */
+body.theme-dark .markdown-rendered h2 {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(139, 92, 246, 0.15));
+  border-left: 5px solid #818cf8;
+  padding: 12px 16px;
+  padding-left: 20px;
+  margin-top: 2em;
+  margin-bottom: 0.8em;
+  border-radius: 0 8px 8px 0;
+  font-size: 1.3em;
+  font-weight: 700;
+  color: #e0e7ff !important;
+}
+
+/* 浅色主题 */
+body.theme-light .markdown-rendered h2 {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(139, 92, 246, 0.06));
+  border-left: 5px solid #6366f1;
+  padding: 12px 16px;
+  padding-left: 20px;
+  margin-top: 2em;
+  margin-bottom: 0.8em;
+  border-radius: 0 8px 8px 0;
+  font-size: 1.3em;
+  font-weight: 700;
+  color: #1e1b4b !important;
+}
+
+/* ===== Level 3 标题 (###) ===== */
+/* 深色主题 */
+body.theme-dark .markdown-rendered h3 {
+  padding: 4px 12px;
+  padding-left: 16px;
+  margin-top: 1em;
+  margin-bottom: 0.3em;
+  border-left: 3px solid rgba(148, 163, 184, 0.35);
+  font-size: 1em;
+  font-weight: 500;
+  color: #94a3b8 !important;
+}
+
+/* 浅色主题 */
+body.theme-light .markdown-rendered h3 {
+  padding: 4px 12px;
+  padding-left: 16px;
+  margin-top: 1em;
+  margin-bottom: 0.3em;
+  border-left: 3px solid rgba(148, 163, 184, 0.5);
+  font-size: 1em;
+  font-weight: 500;
+  color: #64748b !important;
+}
+
+/* ===== Level 1 定义引用框 ===== */
+body.theme-dark .markdown-rendered blockquote {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.1), rgba(56, 189, 248, 0.05));
+  border-left: 5px solid #38bdf8;
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 0 0 1.8em 0;
+  font-size: 0.95em;
+  font-style: normal;
+  color: #bae6fd;
+}
+
+body.theme-light .markdown-rendered blockquote {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.08), rgba(56, 189, 248, 0.04));
+  border-left: 5px solid #0ea5e9;
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 0 0 1.8em 0;
+  font-size: 0.95em;
+  font-style: normal;
+  color: #0369a1;
+}
+
+/* ===== 分隔线 ===== */
+body .markdown-rendered hr {
+  margin: 1.8em 0;
+  border: none;
+  border-top: 1px dashed rgba(148, 163, 184, 0.2);
+}
+
+/* ===== 关系网络 / 参考资料 标题特殊处理 ===== */
+body.theme-dark .markdown-rendered h2:has(> strong:contains("关系网络")),
+body.theme-light .markdown-rendered h2:has(> strong:contains("关系网络")) {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.12), rgba(245, 158, 11, 0.06));
+  border-left-color: #f59e0b;
+}
+
+/* ===== Hover 效果 ===== */
+body .markdown-rendered h2:hover {
+  filter: brightness(1.15);
+  transition: filter 0.2s;
+}

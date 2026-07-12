@@ -177,4 +177,37 @@ status: draft
 
 ---
 
-*整理人：Nemesis · 2026-07-09*
+## 8. L2/L3 视觉层级区分（CSS Snippet）
+
+开启 Reading view 时，L2（##）显示为色块背景 + 粗彩色左边框，L3（###）显示为灰色细线 + 灰色字，从视觉上区分三层结构。
+
+### 安装步骤
+
+1. 在 Obsidian 中打开 vault（本指南第 1 步已完成）
+2. 打开 `Settings → Appearance → 拉到最下面的 CSS snippets 区域`
+3. 点击文件夹图标，打开的目录即 Obsidian 的 snippets 文件夹
+4. 从 `_system/snippets/hierarchy-visual.css` 复制到该目录
+5. 回到 Obsidian，点击 CSS snippets 列表中的刷新图标
+6. 点击 `hierarchy-visual` 的 toggle 开关启用
+7. 切换到 Reading view（Ctrl+E）即可看到效果
+
+### 效果预览
+
+```
+> L1 定义引用框 —— 蓝色左边框 + 天蓝渐变背景
+
+## L2 子主题 —— 紫蓝色渐变背景 + 深色粗左边框 + 加粗大字
+
+### L3 细节项 —— 灰色细左边框 + 浅灰色字，从属于 L2
+```
+
+### 文件位置
+
+- 源文件（版本控制）：`_system/snippets/hierarchy-visual.css`
+- 本地生效文件（不提交）：`.obsidian/snippets/hierarchy-visual.css`
+
+修改 CSS 后，修改源文件并同步到 `.obsidian/snippets/` 刷新即可生效。建议两边机器都使用同一份 CSS 保持视觉一致。`appearance.json` 中的 `enabledCssSnippets` 字段会被 Obsidian 自动管理，推送到 `_system/` 以备参考。
+
+---
+
+*整理人：Damon + Metis · 2026-07-12*
