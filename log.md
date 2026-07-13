@@ -20,6 +20,14 @@
 - raw 源文件：standardization-ml-dl-rl.md + standardization-2nd-brain.md
 - 链接到 [[正交]]（正交初始化与标准化互补关系）
 
+## [2026-07-13] ingest | Softmax
+
+- 新建概念：Softmax（指数归一化概率函数）
+- Level 2（5个子主题）：定义与公式 / 数值稳定性与Log-Sum-Exp / 在注意力机制中 / 与交叉熵损失 / 温度参数
+- Level 3：完整推导、√d缩放原理、梯度之美(p-y)、知识蒸馏中的温度
+- 占位节点（2个）：[[交叉熵]] [[Log-Sum-Exp]]
+- 链接到 [[注意力机制]] [[激活函数]] [[反向传播]] [[flash-attention]] [[内积]]
+
 ## [2026-07-13] ingest | 幂变换
 
 - 新建概念：幂变换（Power Transform）
