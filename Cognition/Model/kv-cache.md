@@ -12,13 +12,13 @@ status: draft
 ---
 # KV Cache
 
-## 定义
-
-KV Cache（Key-Value Cache）是 LLM 推理时的缓存机制，存储已计算过的 Key 和 Value 向量，避免在自回归生成每个新 token 时重复计算历史序列的 KV 值。
+> KV Cache（Key-Value Cache）是 LLM 推理时的缓存机制，存储已计算过的 Key 和 Value 向量，避免在自回归生成每个新 token 时重复计算历史序列的 KV 值。
 
 **本质**：KV Cache 是自回归生成的"时间状态机"——保存历史状态，让每步只需增量计算。
 
-## 核心原理
+---
+
+核心原理
 
 ### Transformer 推理的两阶段
 

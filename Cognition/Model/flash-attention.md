@@ -13,11 +13,11 @@ status: draft
 ---
 # Flash Attention
 
-## 定义
+> Flash Attention 是一种高效的注意力计算算法，通过 **代理值技巧 + 分块计算（Tiling）** 将 softmax 从 3-pass 算法压缩到 1-pass，显著减少 Transformer 模型在长序列上的内存读写次数。
 
-Flash Attention 是一种高效的注意力计算算法，通过 **代理值技巧 + 分块计算（Tiling）** 将 softmax 从 3-pass 算法压缩到 1-pass，显著减少 Transformer 模型在长序列上的内存读写次数。
+---
 
-## 核心原理：从 3-pass 到 1-pass
+核心原理：从 3-pass 到 1-pass
 
 ### 标准 Softmax：3-pass 算法
 

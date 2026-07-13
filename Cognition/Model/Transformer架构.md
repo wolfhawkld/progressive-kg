@@ -18,11 +18,11 @@ status: draft
 ---
 # Transformer架构
 
-## 概念
+> Transformer是一种基于自注意力机制的架构，摆脱了RNN的序列依赖，实现完全并行计算。是现代大语言模型的基础架构。
 
-Transformer是一种基于自注意力机制的架构，摆脱了RNN的序列依赖，实现完全并行计算。是现代大语言模型的基础架构。
+---
 
-## 核心架构
+核心架构
 
 ### Encoder-Decoder结构
 
