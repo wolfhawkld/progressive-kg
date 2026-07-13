@@ -103,62 +103,68 @@ def lint(vault: Path) -> list[dict]:
             continue
         
         if is_concept:
+            # 0. Skip placeholders for broken link and stale checks
+            is_placeholder = fm.get("status") == "placeholder"
+            
             # 2. Missing required fields
             for field in required_fields:
                 if field not in fm or not fm.get(field):
                     issues.append({"file": str(rel), "severity": "error", "check": "missing_field", "msg": f"Missing required field: {field}"})
             
-            # 3. Summary too long (>50 chars)
-            summary = fm.get("summary", "")
-            if isinstance(summary, str) and len(summary) > 50:
-                issues.append({"file": str(rel), "severity": "info", "check": "summary_too_long", "msg": f"Summary is {len(summary)} chars (recommended ≤50)"})
+            # 3. Summary too long (>50 chars) — skip for placeholders
+            if not is_placeholder:
+                summary = fm.get("summary", "")
+                if isinstance(summary, str) and len(summary) > 50:
+                    issues.append({"file": str(rel), "severity": "info", "check": "summary_too_long", "msg": f"Summary is {len(summary)} chars (recommended ≤50)"})
             
-            # 4. Staleness check
-            last_verified = fm.get("last_verified", "")
-            if last_verified:
-                try:
-                    lv_date = datetime.strptime(str(last_verified), "%Y-%m-%d")
-                    if lv_date < stale_cutoff:
-                        issues.append({"file": str(rel), "severity": "warning", "check": "stale", "msg": f"Last verified {last_verified} (> {stale_days} days ago) — mark status: stale"})
-                except ValueError:
-                    issues.append({"file": str(rel), "severity": "warning", "check": "invalid_date", "msg": f"Invalid last_verified date: {last_verified}"})
+            # 4. Staleness check — skip for placeholders
+            if not is_placeholder:
+                last_verified = fm.get("last_verified", "")
+                if last_verified:
+                    try:
+                        lv_date = datetime.strptime(str(last_verified), "%Y-%m-%d")
+                        if lv_date < stale_cutoff:
+                            issues.append({"file": str(rel), "severity": "warning", "check": "stale", "msg": f"Last verified {last_verified} (> {stale_days} days ago) — mark status: stale"})
+                    except ValueError:
+                        issues.append({"file": str(rel), "severity": "warning", "check": "invalid_date", "msg": f"Invalid last_verified date: {last_verified}"})
             
-            # 5. Outbound links count
-            links = extract_wikilinks(content)
-            # Count links in "关系网络" section
-            rel_section = re.search(r"## 关系网络(.+?)(?:## |\Z)", content, re.DOTALL)
-            if rel_section:
-                rel_links = extract_wikilinks(rel_section.group(1))
-                if len(rel_links) < 2:
-                    issues.append({"file": str(rel), "severity": "warning", "check": "too_few_outlinks", "msg": f"关系网络 has {len(rel_links)} outlinks (minimum 2)"})
-            else:
-                issues.append({"file": str(rel), "severity": "warning", "check": "no_relation_section", "msg": "Missing 关系网络 section"})
-            
-            # 6. File too long
-            line_count = content.count("\n")
-            if line_count > 300:
-                issues.append({"file": str(rel), "severity": "info", "check": "file_too_long", "msg": f"{line_count} lines — consider splitting Level 2 into separate files"})
+            # 5., 6. Outbound links and file length — skip for placeholders
+            if not is_placeholder:
+                links = extract_wikilinks(content)
+                # Count links in "关系网络" section
+                rel_section = re.search(r"## 关系网络(.+?)(?:## |\Z)", content, re.DOTALL)
+                if rel_section:
+                    rel_links = extract_wikilinks(rel_section.group(1))
+                    if len(rel_links) < 2:
+                        issues.append({"file": str(rel), "severity": "warning", "check": "too_few_outlinks", "msg": f"关系网络 has {len(rel_links)} outlinks (minimum 2)"})
+                else:
+                    issues.append({"file": str(rel), "severity": "warning", "check": "no_relation_section", "msg": "Missing 关系网络 section"})
+                
+                # 6. File too long
+                line_count = content.count("\n")
+                if line_count > 300:
+                    issues.append({"file": str(rel), "severity": "info", "check": "file_too_long", "msg": f"{line_count} lines — consider splitting Level 2 into separate files"})
             
             # Track inbound links
-            for link in links:
+            for link in extract_wikilinks(content):
                 link_name = link.split("/")[-1].split("\\")[-1]
                 inbound_links[link_name] = inbound_links.get(link_name, 0) + 1
         
-        # 7. Broken links (check all files)
-        links = extract_wikilinks(content)
-        for link in links:
-            link_name = link.split("/")[-1].split("\\")[-1]
-            # Skip raw/ links and SCHEMA etc
-            if link.startswith("raw/") or link in ("SCHEMA", "log"):
-                continue
-            if link_name not in note_names and link not in note_names:
-                issues.append({"file": str(rel), "severity": "error", "check": "broken_link", "msg": f"Broken link: [[{link}]]"})
+        # 7. Broken links — skip for placeholders
+        if fm and fm.get("status") != "placeholder":
+            links = extract_wikilinks(content)
+            for link in links:
+                link_name = link.split("/")[-1].split("\\")[-1]
+                if link.startswith("raw/") or link in ("SCHEMA", "log"):
+                    continue
+                if link_name not in note_names and link not in note_names:
+                    issues.append({"file": str(rel), "severity": "error", "check": "broken_link", "msg": f"Broken link: [[{link}]]"})
     
-    # 8. Orphan pages (concepts with no inbound links)
+    # 8. Orphan pages (concepts with no inbound links) — skip placeholders
     for f in files:
         rel = f.relative_to(vault)
         fm = parse_frontmatter(f.read_text(encoding="utf-8"))
-        if fm and fm.get("level") == "concept":
+        if fm and fm.get("level") == "concept" and fm.get("status") != "placeholder":
             name = f.stem
             if inbound_links.get(name, 0) == 0:
                 issues.append({"file": str(rel), "severity": "warning", "check": "orphan", "msg": "No inbound links — orphan page"})
