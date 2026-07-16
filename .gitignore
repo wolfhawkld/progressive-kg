@@ -1,3 +1,5 @@
 _system/lint-report.md
 .obsidian/
 *.tmp
+__pycache__/
+*.py[cod]

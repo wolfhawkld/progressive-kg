@@ -1,223 +1,129 @@
 ---
+schema_version: '1.1'
 title: KV Cache
-summary: LLM 推理时的缓存机制，存储已计算过的 Key-Value 矩阵，避免重复计算，加速自回归生成
-level: concept
-category: Cognition/Model
-tags: []
-related: []
-created: 2026-07-08
-last_verified: 2026-07-08
-confidence: medium
-status: draft
+aliases:
+- KV-Cache
+- KV缓存
+summary: 自回归推理中复用历史注意力层的 K/V 状态，减少重复投影计算并降低解码延迟
+type: concept
+maturity: growing
+confidence: high
+tags:
+- 注意力机制
+- LLM推理
+- 缓存
+created: '2026-07-08'
+updated: '2026-07-16'
+verified: '2026-07-16'
+review_due: '2026-10-16'
+sources:
+- https://huggingface.co/docs/transformers/cache_explanation
+- https://arxiv.org/abs/2309.06180
 ---
+
 # KV Cache
 
-> KV Cache（Key-Value Cache）是 LLM 推理时的缓存机制，存储已计算过的 Key 和 Value 向量，避免在自回归生成每个新 token 时重复计算历史序列的 KV 值。
+> 自回归推理中复用历史注意力层的 K/V 状态，减少重复投影计算并降低解码延迟。
 
-**本质**：KV Cache 是自回归生成的"时间状态机"——保存历史状态，让每步只需增量计算。
+## 核心定义
 
----
+KV Cache（Key–Value Cache）保存每层注意力中历史 token 已计算出的 Key 和 Value。生成下一个 token 时，只需为新 token 计算 Q/K/V，再让新 Query 与缓存中的全部 K/V 做注意力计算。
 
-核心原理
+它减少的是对历史 token 的重复投影和重复前向计算，不会消除新 Query 对全部历史位置的扫描。
 
-### Transformer 推理的两阶段
+## 推理流程
 
-| 阶段 | 特点 | 计算模式 |
-|------|------|---------|
-| **Prefill** | 处理输入 prompt | 并行计算所有 token 的 KV |
-| **Decoding** | 逐 token 生成 | 自回归，每步只算新 token |
+自回归推理通常分为两个阶段：
 
-Decoding 阶段的计算不对称性：
-- 每个新 token 只需计算自己的 $Q_n$, $K_n$, $V_n$
-- 但注意力需要与**所有历史** KV 计算
+| 阶段 | 输入方式 | KV 处理 |
+|---|---|---|
+| Prefill | 并行处理完整 prompt | 计算并保存 prompt 的 K/V |
+| Decode | 每次加入一个新 token | 只追加新 token 的 K/V |
 
-### 无 KV Cache vs 有 KV Cache
+### 单步解码
 
-| 无 KV Cache | 有 KV Cache |
-|------------|-------------|
-| 每步重新计算所有历史 KV | 只计算新 token 的 KV |
-| 计算复杂度累积 $O(n^2)$ | 每步 $O(1)$（总累积 $O(n)$） |
-| 内存低但极慢 | 内存高但快 |
+在第 $t$ 个解码位置：
 
-KV Cache 的作用：
-1. Prefill 阶段计算并存储 prompt 所有 token 的 K、V
-2. Decoding 阶段：
-   - 只计算新 token 的 $K_n$, $V_n$
-   - Append 到 cache
-   - 用 $Q_n$ 与完整 cached KV 计算注意力
+1. 为新 token 计算 $Q_t,K_t,V_t$。
+2. 把 $K_t,V_t$ 追加到各层缓存。
+3. 用 $Q_t$ 与位置 $1\ldots t$ 的全部缓存 K 做打分，并对对应 V 加权求和。
 
-## 显存占用精确量化
+因此，忽略隐藏维度和层数等常数后，有缓存时第 $t$ 步的注意力工作量仍为 $O(t)$。
 
-### 计算公式
+### 复杂度边界
 
-每个 token 的 KV Cache 内存：
-$$\text{Memory}_{\text{per\_token}} = 2 \times \text{layers} \times \text{heads}_{KV} \times \text{dim}_{\text{head}} \times \text{bytes}$$
+| 情况 | 单个后期解码步 | 生成长度为 $n$ 时的累计注意力工作量 |
+|---|---:|---:|
+| 无缓存，反复重算整个前缀 | $O(n^2)$ | $O(n^3)$ |
+| 使用 KV Cache | $O(n)$ | $O(n^2)$ |
 
-**注意**：使用 GQA/MQA 的模型，$\text{heads}_{KV} < \text{heads}_Q$
+这是只观察序列长度的简化量级。实际延迟还受模型宽度、层数、批大小、内存带宽和所用 kernel 影响。KV Cache 的核心收益是避免重复计算历史 K/V，而不是把注意力本身变成线性累计复杂度。
 
-### 实例计算
+## 显存占用
 
-**LLaMA-3-8B (FP16)**：
-- Layers: 32
-- KV Heads: 8 (GQA，Query 头是 32)
-- Head dim: 128
-- Bytes: 2 (FP16)
+若不考虑对齐、分页和运行时开销，每个 token 的理论 KV 容量为：
 
-$$\text{Memory} = 2 \times 32 \times 8 \times 128 \times 2 = 131,072 \text{ Bytes} \approx 128 \text{ KB/token}$$
+$$
+2 \times L_{\text{layers}} \times H_{KV} \times D_{head} \times B_{dtype}
+$$
 
-**序列长度影响**：
-| 序列长度 | KV Cache 占用 |
-|---------|--------------|
-| 2048 tokens | ~256 MB |
-| 16K tokens | ~2 GB |
-| 128K tokens | ~16 GB |
+其中 2 分别代表 K 和 V。批大小、并行序列数和序列长度还要继续相乘；使用 GQA/MQA 时，$H_{KV}$ 小于 Query 头数，因此缓存更小。
 
-**结论**：长上下文场景下，KV Cache 是显存瓶颈的主要来源。
+### 示例
 
-## 传统管理的失效：内存碎片
+假设模型有 32 层、8 个 KV 头、head dimension 为 128，并用 2-byte 数据类型保存缓存：
 
-原生 PyTorch/FasterTransformer 采用**预分配连续显存**：
+$$
+2 \times 32 \times 8 \times 128 \times 2 = 131{,}072\ \text{bytes/token}
+$$
 
-### 问题
+即约 128 KiB/token。单序列 2K、16K、128K token 的理论缓存分别约为 256 MiB、2 GiB、16 GiB；真实占用还会受实现和内存对齐影响。
 
-| 碎片类型 | 描述 |
-|---------|------|
-| **Internal Fragmentation** | 为最大长度预留空间，实际生成往往远短，空间空置 |
-| **Reservation Gap** | 无法预测输出长度，必须锁定剩余空间，无法被其他 batch 共享 |
+## PagedAttention
 
-显存利用率仅 ~60%，大量预留空间浪费。
+传统服务若按最大输出长度为每个请求预留连续缓存，会产生内部碎片和过度预留。PagedAttention 把一条逻辑连续的 KV 序列映射到离散物理块，并按需分配：
 
-## PagedAttention：内存分页映射
+- 块表维护逻辑块到物理块的映射；块大小是实现参数，并非固定为 16 token。
+- 并行采样或 beam search 可共享 prompt 块，在发生分歧时使用写时复制。
+- 请求结束后释放块，使服务端更容易动态组合不同长度的请求。
 
-vLLM 提出的 **PagedAttention** 将操作系统虚拟内存思想引入 GPU 显存管理：
-
-### 核心数据结构
-
-```
-┌─────────────────┐     ┌─────────────────┐
-│ Logical Blocks  │     │ Physical Blocks │
-│ (模型感知的KV)   │ ←── │ Block Table     │
-│ 逻辑连续        │     │ (显存离散存储)   │
-└─────────────────┘     └─────────────────┘
-```
-
-- **Block Size**：通常 16 tokens
-- **Logical Blocks**：模型视角的连续 KV 序列
-- **Physical Blocks**：显存中离散分布的存储块
-- **Block Table**：逻辑→物理映射（类似 OS 页表）
-
-### 动态按需分配
-
-```
-Token 生成流程：
-┌──────────┐
-│ Block 1  │ ← 填满后申请下一个
-│ (tokens  │
-│  1-16)   │
-└──────────┘
-      ↓
-从 Free Block Pool 申请 Block 2
-      ↓
-┌──────────┐
-│ Block 2  │ ← 继续填充...
-│ (tokens  │
-│ 17-32)   │
-└──────────┘
-```
-
-**效果**：显存利用率从 ~60% 提升至 **96%+**
-
-### Copy-on-Write (CoW) 与并行采样
-
-PagedAttention 天然支持高效并行采样：
-
-| 场景 | 传统方案 | PagedAttention |
-|------|---------|----------------|
-| Beam Search | 每个 beam 复制完整 KV | 共享 prompt 的物理块 |
-| Parallel Sampling | 每个样本独立 KV | 只在分歧点 CoW |
-
-**机制**：多个请求共享同一 Prompt 的物理块，仅在需要写入不同新 token 时触发 CoW，极大降低内存冗余。
+PagedAttention 论文在其测试模型和工作负载中报告了接近零的 KV 内存浪费，以及相对当时系统约 2–4 倍的吞吐提升；这些是实验结果，不是任意硬件与负载上的固定保证。
 
 ## Continuous Batching
 
-配合 PagedAttention，vLLM 实现 **Continuous Batching**：
+连续批处理允许已完成的请求及时离开、等待的请求及时加入，减少静态批处理等待最长序列造成的空闲。它能缓解队头阻塞并提高设备利用率，但仍受 prefill/decode 调度、显存预算和服务级目标约束。
 
-- 同一 batch 可处理不同阶段（Prefill/Decoding）的请求
-- 消除传统 batch 必须等待最长请求的"木桶效应"
-- 显著提高 Effective Batch Size 和吞吐量
+- 调度器需要在吞吐、首 token 延迟和 decode 抖动之间取舍。
+- 大 prefill 可能阻塞正在 decode 的请求，因此常需分块或优先级策略。
 
-## 真实硬件约束
+## 容量规划
 
-**RTX 4090 (24GB) 部署 LLaMA-3-8B**：
+可用于 KV Cache 的显存不是“总显存减模型权重”这么简单，还需要预留激活、临时工作区、框架和通信开销。实用估算顺序是：
 
-| 内存用途 | 占用 |
-|---------|------|
-| 模型权重 | ~15 GB |
-| KV Cache 可用 | ~9 GB |
+1. 测量模型加载后的稳定显存基线。
+2. 为运行时峰值和安全余量留预算。
+3. 用每 token 缓存公式估算总 token 容量。
+4. 再按并发数、平均 prompt 和最大生成长度分配。
 
-**容量估算**：
-- FP16：~72K tokens
-- FP8 KV Cache 量化：~144K tokens
+常见优化包括 KV 量化、GQA/MQA、前缀缓存、分页管理和有条件的 KV 淘汰。它们分别交换精度、模型结构、调度复杂度或可见上下文，不能视为完全无代价。
 
-**注意**：单卡 24GB 无法实现"百万上下文"，需要多卡张量并行或 CPU Offloading。
+## 与其他推理优化的区别
 
-## 技术演进
+| 方法 | 主要减少什么 | 是否改变缓存内容 |
+|---|---|---|
+| KV Cache | 历史 K/V 的重复计算 | 保存完整历史 K/V |
+| FlashAttention | 注意力 kernel 的 HBM 数据搬运和中间矩阵物化 | 不负责跨解码步保存 K/V |
+| GQA/MQA | KV 头数和缓存体积 | 改变注意力头结构，通常需对应模型设计或训练 |
+| PagedAttention | KV 内存碎片和预留浪费 | 改变缓存的物理管理方式 |
+| KV 淘汰/压缩 | 长上下文的缓存容量 | 可能近似化或丢弃部分历史信息 |
 
-| 优化方向 | 方法 |
-|---------|------|
-| **KV Cache 量化** | INT8/FP8，压缩单元空间 |
-| **Block Size 调优** | 16 是碎片与调度开销的平衡点 |
-| **计算下沉** | 结合 FlashAttention-3，减少 HBM↔SRAM 搬运 |
-| **KV Eviction** | 丢弃不重要位置的 KV（StreamingLLM, H2O） |
-| **Prefix Caching** | 跨请求复用共享 prefix 的 KV |
+## 关系网络
 
-## KV Cache 在推理优化中的定位
-
-根据李宏毅 ML 2026 Spring 课程的整理，LLM 推理优化方法对比：
-
-| 方法 | 核心思想 | 是否改变原有 Attention | 是否需要训练模型 | 其他代价 |
-|------|---------|----------------------|----------------|---------|
-| **Flash Attention** | 少搬资料 | ✗ | ✗ | 一点额外运算+一点点烧脑 |
-| **KV Cache** | **储存已经算出来的 key 和 value** | ✗ | ✗ | **占用记忆体** |
-| Multi-query attention | 多个 query 共享 key 和 value | ✓ | ✓ | 可能明显伤害模型能力 |
-| Group-query attention | 多个 query 共享 key 和 value | ✓ | ✓ | - |
-| Multi-head Latent Attention | 压缩 key 和 value | ✓ | ✓ | - |
-| Sliding Window Attention | 改变 Attention 范围 | ✓ | ? | - |
-| Streaming LLM | - | ✓ | ? | - |
-| Pruning KV Cache | 丢弃 key 和 value | ✓ | ✗ | 可能明显伤害模型能力 |
-| Speculative Decoding | 用小模型来预言生成结果 | ✗ (理论上) | ✗ | 小模型还是需要耗费额外算力 |
-
-**KV Cache 的特点**：
-- ✅ **不改变原有 Attention 机制** — 只是缓存中间结果
-- ✅ **不需要重新训练模型** — 推理时动态启用
-- ⚠️ **代价是占用记忆体** — 长序列时显存压力大
-
-## 总结
-
-| 技术 | 解决的问题 |
-|------|-----------|
-| **KV Cache** | $O(n^2)$ 计算复杂度 → $O(n)$ |
-| **PagedAttention** | $O(n)$ 空间管理失控 → 动态按需分配 |
-
-## 前置知识
-
-- [[注意力机制]] - KV Cache 缓存的是注意力计算的中间结果
-- [[Transformer架构]] - 理解 decoder-only 自回归生成
-- [[flash-attention]] - 计算层面的优化（两者互补）
-
-## 应用场景
-
-- 长对话聊天机器人
-- 长文档问答
-- 批量推理服务（vLLM, TensorRT-LLM）
-- 多轮对话系统
+- 前置 [[注意力机制]] — 缓存的是注意力层已经计算出的 K/V
+- 应用 [[Transformer架构]] — 主要用于自回归 Transformer 的增量解码
+- 对比 [[flash-attention]] — 分别优化跨步重复计算与单次注意力的内存 IO
 
 ## 参考资料
 
-- vLLM: Easy, Fast, and Cheap LLM Serving with PagedAttention (Kwon et al., 2023)
-- 李宏毅 ML 2026 Spring：加快語言模型生成速度(2/2)：KV Cache
-- 大模型推理-Page attention 内存分页术（腾讯云开发者社区）
-- H2O: Heavy-Hitter Oracle for Efficient LLM Decoding
-
----
-*参考李宏毅 ML 2026 Spring 课程 · Nemo 整理*
+- [Hugging Face：Cache explanation](https://huggingface.co/docs/transformers/cache_explanation) — 缓存张量、位置与解码流程
+- [Efficient Memory Management for Large Language Model Serving with PagedAttention](https://arxiv.org/abs/2309.06180) — PagedAttention 与 vLLM 的原始论文

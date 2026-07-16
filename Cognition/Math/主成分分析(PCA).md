@@ -1,21 +1,26 @@
 ---
+schema_version: '1.1'
 title: 主成分分析（Principal Component Analysis, PCA）
+aliases:
+- PCA
+- Principal Component Analysis
 summary: 最经典的线性降维方法。将高维数据投影到方差最大的方向上，用少数主成分保留尽可能多的信息。
-level: concept
-category: Cognition/Math
-tags: []
-related:
-  - "[[奇异值]]"
-  - "[[标准化(Standardization)]]"
-  - "[[内积]]"
-  - "[[正交]]"
-  - "[[均方误差]]"
-  - "[[RRF(Reciprocal Rank Fusion)]]"
-created: 2026-05-21
-last_verified: 2026-07-08
-confidence: medium
-status: draft
+type: concept
+maturity: evergreen
+confidence: high
+tags:
+- 线性代数
+- 降维
+- 统计学习
+created: '2026-05-21'
+updated: '2026-07-16'
+verified: '2026-07-16'
+review_due: '2027-07-16'
+sources:
+- https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html
+- https://doi.org/10.1080/14786440109462720
 ---
+
 # 主成分分析（Principal Component Analysis, PCA）
 
 > 最经典的线性降维方法。将高维数据投影到方差最大的方向上，用少数主成分保留尽可能多的信息。
@@ -36,6 +41,8 @@ status: draft
 
 ## 核心定义/公式
 
+PCA 可以从协方差矩阵特征分解或中心化数据的 SVD 两条等价路径理解；两者都先处理数据相对均值的变化。
+
 ### 协方差矩阵法
 
 $$
@@ -50,12 +57,13 @@ $$
 
 - $\lambda_i$：第 i 个主成分的方差（特征值越大 → 方向越重要）
 - $\mathbf{v}_i$：第 i 个主成分的方向（特征向量）
-- 第 i 个主成分 = $\mathbf{X}\mathbf{v}_i$
+- 第 i 个主成分得分 = $(\mathbf{X}-\bar{\mathbf{X}})\mathbf{v}_i$
 
 ### SVD 等价法（更稳定）
 
 $$
-\mathbf{X} = \mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^T
+\mathbf{X}_c = \mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^T,
+\quad \mathbf{X}_c=\mathbf{X}-\bar{\mathbf{X}}
 $$
 
 - $\mathbf{V}$ 的列向量就是 PCA 的主成分方向
@@ -77,9 +85,9 @@ $$
 | **线性** | 只能捕捉线性关系，无法处理非线性结构 |
 | **正交** | 主成分之间互相正交（线性无关） |
 | **方差排序** | 主成分严格按方差从大到小排列 |
-| **全局最优** | 在 MSE 意义下是最优线性降维 |
+| **全局最优** | 截断 PCA 给出中心化数据的最优秩 $k$ 正交重构（平方误差意义下） |
 | **无监督** | 不需要标签，纯数据驱动 |
-| **方差敏感** | 量纲不同时会被大数值特征主导 → 必须先标准化 |
+| **尺度敏感** | 是否先标准化取决于各特征单位和方差是否应被同等对待 |
 
 ---
 
@@ -95,7 +103,7 @@ $$
 | Autoencoder | 非线性 | 无监督 | 神经网络自编码 | 深层非线性压缩 |
 | [[内积]] | — | — | $x^Ty$ | PCA 投影计算手段 |
 | [[均方误差]] | — | — | $(y-\hat{y})^2$ | PCA 的优化目标 |
-| [[标准化(Standardization)]] | — | — | 去量纲 | PCA 的必要前置步骤 |
+| [[标准化|标准化(Standardization)]] | — | — | 调整特征尺度 | 在量纲不可直接比较时常作为前置步骤 |
 
 ---
 
@@ -114,6 +122,8 @@ $$
 ---
 
 ## Python 实现（简化版）
+
+下面分别给出 NumPy 的显式中心化实现和 scikit-learn 流水线；两者的尺度策略需要保持一致。
 
 ### 1. NumPy 手写 PCA（SVD 法）
 
@@ -157,7 +167,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 
 pipeline = Pipeline([
-    ('scaler', StandardScaler()),     # PCA 前必须标准化！
+    # 当各特征量纲不同、且希望同等对待时加入 StandardScaler
+    ('scaler', StandardScaler()),
     ('pca', PCA(n_components=0.95)),  # 保留 95% 方差
 ])
 X_transformed = pipeline.fit_transform(X)
@@ -173,7 +184,7 @@ print(f"保留 {pipeline[-1].n_components_} 个主成分")
 | 本质 | 线性降维，找方差最大的投影方向 |
 | 计算 | 协方差矩阵特征分解 / SVD |
 | 关键约束 | 主成分间正交 |
-| 前置要求 | **必须先标准化！** 否则大数值特征劫持主成分 |
+| 前置处理 | 必须中心化；是否缩放到单位方差取决于量纲与分析目标 |
 | 常用场景 | 降维、可视化、去噪、embedding 分析 |
 | 局限性 | 只捕捉线性结构，无法处理非线性流形 |
 | 变体 | Kernel PCA（非线性）、Sparse PCA（可解释）、Incremental PCA（大数据流式） |
@@ -183,26 +194,24 @@ print(f"保留 {pipeline[-1].n_components_} 个主成分")
 ## 记忆口诀
 
 > 去均值，算协方差；特征分解找方向。
-> 方差大为第一轴，正交往后排；降维去噪可视化，标准化前置不能忘。
+> 方差大为第一轴，正交往后排；降维去噪可视化，量纲不同再缩放。
 
 ---
 
-## 相关概念
-
+## 关系网络
 - [[奇异值|SVD]] — PCA 的数值计算工具，更稳定
-- [[标准化(Standardization)]] — PCA 前必须标准化，避免量纲偏差
+- [[标准化|标准化(Standardization)]] — 特征量纲不宜直接比较时先缩放；PCA 本身只要求中心化
 - [[内积]] — PCA 投影 = 数据向量与主成分的内积
 - [[正交]] — 主成分之间严格正交
 - [[均方误差]] — PCA 用均方误差最小化寻找最优投影
-- [[RRF(Reciprocal Rank Fusion)]] — 信息检索中的排序融合，与 PCA 的信息压缩理念相通
 
 ---
 
 ## 参考资料
 
-- **原始论文**：Pearson, K. (1901). On Lines and Planes of Closest Fit to Systems of Points in Space
+- **原始论文**：[Pearson, K. (1901). On Lines and Planes of Closest Fit to Systems of Points in Space](https://doi.org/10.1080/14786440109462720)
 - **Hotelling, H. (1933).** Analysis of a complex of statistical variables into principal components
-- **sklearn 文档**：[sklearn.decomposition.PCA](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html)
+- **scikit-learn 文档**：[sklearn.decomposition.PCA](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html)
 - **Bishop PRML**：Chapter 12.1 — Principal Component Analysis
 
 ---

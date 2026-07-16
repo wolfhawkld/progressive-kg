@@ -88,8 +88,9 @@ body .markdown-rendered hr {
 }
 
 /* ===== 关系网络 / 参考资料 标题特殊处理 ===== */
-body.theme-dark .markdown-rendered h2:has(> strong:contains("关系网络")),
-body.theme-light .markdown-rendered h2:has(> strong:contains("关系网络")) {
+/* Obsidian 在渲染标题上提供 data-heading；避免使用浏览器不支持的 :contains()。 */
+body .markdown-rendered h2[data-heading="关系网络"],
+body .markdown-rendered h2[data-heading="参考资料"] {
   background: linear-gradient(135deg, rgba(251, 191, 36, 0.12), rgba(245, 158, 11, 0.06));
   border-left-color: #f59e0b;
 }

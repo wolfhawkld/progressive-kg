@@ -1,20 +1,25 @@
-# Obsidian 配置参考（Metis 端 2026-07-12）
-> 本机 .obsidian/ 的配置值快照，供 Nemesis 手动同步。
-> `.obsidian/` 在 gitignore 中，不参与版本控制。
-> 实际操作步骤见 `_system/obsidian-setup-guide.md`。
+# Obsidian 配置参考
 
----
+> 2026-07-16 本机 `.obsidian/` 快照。该目录被 Git 忽略，本文件只用于跨机器手动恢复。
 
-## app.json（编辑器设置）
+## 入口契约
+
+- 主入口：`home.md`
+- 默认视图：Reading View（`preview`）
+- Home CSS class：`kg-home`
+- Graph View：辅助入口，不替代 Home/MOC
+
+当前本机 `workspace.json` 的主 leaf 打开 `home.md`，mode 为 `preview`。换机器后按 setup guide 手动打开并固定 Home。
+
+## app.json
 
 ```json
-{ "defaultViewMode": "preview" }
+{
+  "defaultViewMode": "preview"
+}
 ```
 
-- `preview` = Reading view
-- 在 Settings → Editor → Default view mode 中设置
-
-## appearance.json（外观）
+## appearance.json
 
 ```json
 {
@@ -23,51 +28,57 @@
 }
 ```
 
-- CSS 源文件在 `_system/snippets/hierarchy-visual.css`
-- 复制到本机 `.obsidian/snippets/` 后，通过 Settings → Appearance → CSS snippets 启用
+CSS 版本控制源：`_system/snippets/hierarchy-visual.css`。
 
-## community-plugins.json
+## 社区插件
 
 ```json
 ["dataview", "persistent-graph"]
 ```
 
-- 两个社区插件都通过 Settings → Community plugins → Browse 手动安装
-- Dataview：MOC 文件中的 ```` ```dataview ```` 查询依赖此插件
-- Persistent Graph：保存图谱节点位置布局
+- Dataview：Home 和 MOC 动态表格的必需依赖。
+- Persistent Graph：可选，只保存全局图谱布局。
 
-## core-plugins.json（已启用的核心插件）
+本机 manifest 快照：Dataview `0.5.68`，Persistent Graph `0.3.2`。版本号只描述当前机器，不是仓库兼容性保证；安装时使用 Obsidian 社区插件渠道提供的兼容版本。
 
-```json
-{
-  "file-explorer": true,
-  "global-search": true,
-  "switcher": true,
-  "graph": true,
-  "backlink": true,
-  "outgoing-link": true,
-  "tag-pane": true,
-  "page-preview": true,
-  "templates": true,
-  "note-composer": true,
-  "command-palette": true,
-  "editor-status": true,
-  "outline": true,
-  "word-count": true,
-  "file-recovery": true,
-  "canvas": true,
-  "properties": true,
-  "bookmarks": true,
-  "bases": true
-}
+## 核心插件
+
+当前开启：
+
+```text
+file-explorer, global-search, switcher, graph, backlink,
+outgoing-link, tag-pane, page-preview, templates, note-composer,
+command-palette, editor-status, outline, word-count, file-recovery,
+canvas, properties, bookmarks, bases
 ```
 
-- 其余核心插件（daily-notes, slides, sync 等）保持关闭
+当前关闭且非本库必需：
 
-## graph.json（图谱视图）
+```text
+daily-notes, sync, slides, audio-recorder, workspaces,
+publish, footnotes, webviewer
+```
 
-- **过滤器**：`-path:raw -path:_system -file:_moc -file:home -file:SCHEMA -file:log`
-- **节点大小**：1.2x
-- **显示孤立节点**：开（便于发现未关联概念）
-- **6 个颜色分组**：Cognition/Math(蓝) / Cognition/Model(绿) / Skill/dl-training(橙) / Skill(红) / Meta(紫) / Cognition(青)
-- 详细颜色 RGB 值见 graph.json 文件
+## Graph View
+
+过滤器：
+
+```text
+-path:raw -path:_system -file:_moc -file:home -file:SCHEMA -file:log
+```
+
+设置快照：
+
+- node size multiplier：`1.2`
+- tags/attachments：隐藏
+- orphans：显示
+- unresolved：本机 `hideUnresolved=false`；Schema lint 负责阻止仓库断链
+- 六个颜色组：Math、Model、dl-training、Skill、Meta、Cognition
+
+## 不应跨机器覆盖的文件
+
+- `workspace.json`：窗口布局、当前页和最近文件。
+- `hotkeys.json`：个人快捷键。
+- 插件 `data.json`：可能含机器或版本相关状态。
+
+复制配置前先备份目标机器的 `.obsidian/`，并始终用 `home.md` 的实际渲染结果做最终验收。

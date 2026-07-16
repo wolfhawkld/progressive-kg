@@ -1,23 +1,33 @@
 ---
+schema_version: '1.1'
 title: MoE架构 (Mixture of Experts)
-summary: 通过稀疏激活实现模型容量与计算效率的平衡，在推理成本可控下大幅扩展模型参数量
-level: concept
-category: Cognition/Model
-tags: []
-related:
-- '[[Transformer架构]]'
-- '[[分布式训练]]'
-- '[[参数高效微调]]'
-created: 2026-07-08
-last_verified: 2026-07-08
-confidence: medium
-status: draft
+aliases:
+- MoE
+- Mixture of Experts
+- 混合专家模型
+summary: 用路由器为每个 token 选择少量专家，在不激活全部参数的情况下扩展模型容量
+type: concept
+maturity: growing
+confidence: high
+tags:
+- 模型架构
+- 稀疏模型
+- LLM
+created: '2026-07-08'
+updated: '2026-07-16'
+verified: '2026-07-16'
+review_due: '2027-01-16'
+sources:
+- https://arxiv.org/abs/2101.03961
+- https://arxiv.org/abs/2006.16668
+- https://arxiv.org/abs/2401.04088
 ---
+
 # MoE架构 (Mixture of Experts)
 
-> MoE（混合专家）通过稀疏激活实现模型容量与计算效率的平衡。在保持推理成本可控的同时，大幅扩展模型参数量。
+> 用路由器为每个 token 选择少量专家，在不激活全部参数的情况下扩展模型容量。
 
----
+稀疏 MoE（Mixture of Experts）通常用多个专家替换 Transformer 的 FFN，并让路由器只为每个 token 选择少量专家。这样总参数量可以远大于每 token 激活参数量，但权重存储、路由和跨设备通信仍可能成为训练与推理瓶颈。
 
 核心思想
 
@@ -31,6 +41,8 @@ y = Σ_{i=1}^{n} G(x)_i * E_i(x)
 
 ## 关键组件
 
+MoE 层需要同时定义专家计算、token 路由和容量约束；只描述专家 FFN 还不足以确定系统行为。
+
 ### 专家层
 
 ```
@@ -38,13 +50,14 @@ y = Σ_{i=1}^{n} G(x)_i * E_i(x)
 E_i(x) = W_2 * activation(W_1 * x)
 ```
 
-- 专家数量: 通常8-128个
-- 每个专家参数量相同
+- 专家数量、结构和大小由模型设计决定；同层专家常同构，但不是定义要求
 
 ### 门控网络 (Router)
 
 ```
-G(x) = Softmax(TopK(x * W_g))
+logits = x W_g
+S = TopK(logits, k)
+G_S(x) = Softmax(logits_S)
 ```
 
 - 计算每个专家的得分
@@ -55,25 +68,27 @@ G(x) = Softmax(TopK(x * W_g))
 
 **问题**: 专家负载不均衡，部分专家过载/闲置
 
-**解决方案**: 添加负载均衡损失
+**常见方案**: 添加负载均衡损失、限制容量、调整路由噪声，或采用不依赖辅助损失的均衡策略
 
 ```
-L_aux = α * (标准差/均值)²
+L_aux = α · N · Σ_i f_i p_i   （Switch Transformer 示例）
 ```
 
-- 鼓励各专家均匀使用
-- α: 平衡系数
+- $f_i$ 表示实际路由到专家 $i$ 的 token 比例，$p_i$ 表示平均路由概率
+- 公式因路由算法而异，不能把“变异系数平方”当成所有 MoE 的统一定义
 
 ## 训练技巧
+
+训练稳定性主要取决于容量分配、路由均衡和跨设备通信，三者需要联合调试。
 
 ### 容量因子 (Capacity Factor)
 
 ```
-expert_capacity = (batch_size * k / num_experts) * capacity_factor
+expert_capacity ≈ ceil(tokens * k / num_experts * capacity_factor)
 ```
 
 - 控制每个专家处理的最大token数
-- 超过容量的token被丢弃或路由到其他专家
+- 超额 token 可被丢弃、转给备选专家或由无丢弃实现动态处理，策略取决于系统
 
 ### 专家并行 (Expert Parallelism)
 
@@ -87,21 +102,22 @@ expert_capacity = (batch_size * k / num_experts) * capacity_factor
 - **Expert Choice**: 专家选择token（非token选专家）
 - **BASE**: 最优传输理论的路由
 
-## 代表模型
+## 代表设计
 
-| 模型 | 参数量 | 激活参数 | 专家数 |
-|-----|--------|---------|--------|
-| Switch Transformer | 1.6T | 1.6B | 2048 |
-| GLaM | 1.2T | 96B | 64 |
-| Mixtral 8x7B | 47B | 13B | 8 |
-| Grok-1 | 314B | ~80B | 8 |
+| 工作 | 路由特征 | 说明 |
+|---|---|---|
+| Switch Transformer | Top-1 | 简化路由，并系统研究容量与负载均衡 |
+| GShard | Top-2 | 展示超大规模条件计算与专家并行 |
+| Mixtral 8x7B | 每 token 选择 8 个专家中的 2 个 | 开放权重稀疏 MoE 的代表实现 |
 
 ## 优势与挑战
 
+稀疏激活降低每 token 的专家计算，但总权重、路由和通信成本仍由整个系统承担。
+
 ### 优势
-- **计算效率**: 推理成本远小于总参数量
+- **条件计算**: 每 token 的专家计算量小于激活全部专家
 - **扩展性**: 可持续增加专家数量
-- **专业化**: 不同专家可能学习不同领域知识
+- **潜在专业化**: 专家可能形成一定分工，但路由模式不一定对应人类可解释领域
 
 ### 挑战
 - **训练不稳定**: 路由收敛问题
@@ -113,14 +129,19 @@ expert_capacity = (batch_size * k / num_experts) * capacity_factor
 
 | 特性 | MoE | 稠密模型 |
 |-----|-----|---------|
-| 参数效率 | 高 | 低 |
-| 训练稳定性 | 低 | 高 |
-| 推理速度 | 快（相同激活参数） | 相同 |
-| 内存需求 | 高（总参数） | 低 |
-| 微调难度 | 高 | 低 |
+| 每 token 激活参数 | 可远小于总参数 | 等于所用层的全部参数 |
+| 路由与通信 | 有额外路由、容量和 All-to-All 问题 | 无专家路由开销 |
+| 推理速度 | 激活 FLOPs 可较低，但权重读取、批量和通信可能抵消收益 | 更容易使用规则、成熟的 dense kernels |
+| 权重内存 | 必须容纳或分片全部专家权重 | 容纳稠密权重 |
+| 训练/微调 | 需处理负载、专家退化和并行布局 | 通常更直接，但成本取决于模型规模 |
 
-## 相关概念
-
+## 关系网络
 - [[Transformer架构]] - MoE通常替换FFN层
 - [[分布式训练]] - 专家并行策略
 - [[参数高效微调]] - MoE的微调挑战
+
+## 参考资料
+
+- [Switch Transformers](https://arxiv.org/abs/2101.03961) — Top-1 路由、容量与辅助损失
+- [GShard](https://arxiv.org/abs/2006.16668) — 条件计算与专家并行
+- [Mixtral of Experts](https://arxiv.org/abs/2401.04088) — Top-2 of 8 的开放 MoE 架构

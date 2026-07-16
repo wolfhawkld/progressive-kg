@@ -1,25 +1,26 @@
 ---
+schema_version: '1.1'
 title: 实验记录
-level: moc
-category: Horizon/experiments
+type: moc
+scope: Horizon/experiments
 ---
 
 # 实验记录
 
-## 概念索引
+## 当前目录
 
 ```dataview
-TABLE summary AS "定义", last_verified AS "验证日期", status AS "状态"
-FROM "Horizon/experiments"
-WHERE level = "concept"
+TABLE summary AS "定义", maturity AS "成熟度", verified AS "已核验"
+FROM ""
+WHERE file.folder = this.scope AND type != "moc"
 SORT title ASC
 ```
 
 ## 待审阅
 
 ```dataview
-TABLE summary AS "定义", last_verified AS "验证日期"
-FROM "Horizon/experiments"
-WHERE level = "concept" AND (status = "stale" OR status = "draft" OR confidence = "low")
-SORT last_verified ASC
+TABLE summary AS "定义", maturity AS "成熟度", review_due AS "复核日期"
+FROM ""
+WHERE startswith(file.folder, this.scope) AND type != "moc" AND (maturity != "evergreen" OR confidence = "low" OR !verified OR !sources OR (review_due AND review_due <= date(today)))
+SORT review_due ASC
 ```

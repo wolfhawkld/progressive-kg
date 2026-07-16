@@ -1,24 +1,30 @@
 ---
+schema_version: '1.1'
 title: RoPE（Rotary Position Embedding，旋转位置编码）
+aliases:
+- Rotary Position Embedding
+- 旋转位置编码
 summary: 把位置信息编码为旋转变换的位置编码方法，用于 Transformer 自注意力机制
-level: concept
-category: Cognition/Model/关键机制
-tags: []
-related:
-- '[[位置编码]]'
-- '[[Transformer架构]]'
-- '[[注意力机制]]'
-- '[[kv-cache]]'
-- '[[flash-attention]]'
-- '[[奇异值]]'
-created: 2026-04-26
-last_verified: 2026-07-08
-confidence: medium
-status: draft
+type: concept
+maturity: growing
+confidence: high
+tags:
+- 位置编码
+- 注意力机制
+- LLM
+created: '2026-04-26'
+updated: '2026-07-16'
+verified: '2026-07-16'
+review_due: '2027-01-16'
+sources:
+- https://arxiv.org/abs/2104.09864
+- https://arxiv.org/abs/2309.00071
+- https://arxiv.org/abs/2402.13753
 ---
+
 # RoPE（Rotary Position Embedding，旋转位置编码）
 
-> RoPE 是一种把位置信息编码为“旋转”的 Transformer 位置编码方法。它不直接把位置向量加到 token embedding 上，而是在注意力计算前旋转 Query 和 Key，使 QK 内积天然包含相对位置信息。
+> 把位置信息编码为旋转变换的位置编码方法，用于 Transformer 自注意力机制。
 
 ---
 
@@ -104,7 +110,7 @@ RoPE 会把高维向量按两两一组拆开：
 位置 m 的旋转角 = m · θ_i
 ```
 
-低维频率高，适合表达短距离变化；高维频率低，适合表达长距离变化。
+较高频率的维度对位置变化更敏感，较低频率的维度变化更慢。它们共同提供多尺度相位信息；不能简单等同为某些维度只负责短距离、另一些只负责长距离。
 
 ---
 
@@ -141,8 +147,8 @@ Attention = softmax(Q_rot K_rot^T / sqrt(d)) V
 | Sinusoidal PE | 加到 embedding | 间接 | 一般 | 0 |
 | Learned PE | 学习位置向量 | 弱 | 弱 | O(Ld) |
 | Relative Position Bias | 加到 attention score | 强 | 取决于设计 | 有参数 |
-| ALiBi | attention score 加线性偏置 | 强 | 很强 | 极少 |
-| RoPE | 旋转 Q/K | 强 | 较强 | 0 |
+| ALiBi | attention score 加线性偏置 | 强 | 特定设置下较好 | 极少 |
+| RoPE | 旋转 Q/K | 强 | 原生外推有限，常需缩放 | 0 |
 
 RoPE 的优势在于：它既保留绝对位置编码的实现简洁性，又让 attention score 显式具有相对位置结构。
 
@@ -154,7 +160,7 @@ RoPE 的优势在于：它既保留绝对位置编码的实现简洁性，又让
 |------|------|
 | 无额外可训练参数 | 旋转角由位置和频率规则生成 |
 | 相对位置自然出现 | Q/K 内积依赖相对距离 m-n |
-| 长度外推较好 | 比 learned position embedding 更适合外推 |
+| 长度外推有条件 | 公式可计算到更远位置，但质量常需 scaling 或继续训练维持 |
 | 与 Attention 强耦合 | 直接改造 Q/K，而不是 embedding 本身 |
 | LLM 标配 | LLaMA、GLM、PaLM、Qwen 等大量模型采用或改造 RoPE |
 
@@ -162,13 +168,15 @@ RoPE 的优势在于：它既保留绝对位置编码的实现简洁性，又让
 
 ## 深度学习中的应用
 
+RoPE 的应用从一维文本扩展到长上下文和多轴坐标，但不同扩展改变的频率与位置假设并不相同。
+
 ### 1. 大语言模型位置编码
 
 RoPE 已成为 decoder-only LLM 的常见默认选择。原因：
 
 - 自回归生成只需要处理 Q/K 的位置旋转；
 - 无需学习固定长度的位置表；
-- 对长上下文扩展比 learned PE 更友好；
+- 不受固定 learned embedding 表长度直接限制；
 - 与 KV Cache 兼容。
 
 ### 2. 长上下文扩展
@@ -181,7 +189,7 @@ RoPE 虽然具备外推能力，但直接外推到远超训练长度时也会退
 - LongRoPE
 - partial RoPE
 
-例如 DeepSeek-V4 技术报告中提到，在 CSA/HCA 中对 query、KV entry 以及 attention output 的部分维度应用 RoPE，以在压缩注意力中保留相对位置信息。
+这些方法改变频率、位置映射或旋转维度比例，目标是在保留训练区间行为的同时降低超长位置的相位失配；不同方法不能互换视为同一算法。
 
 ### 3. 多模态与二维位置
 
@@ -265,22 +273,19 @@ k_rot = apply_rope(k, pos)
 
 ---
 
-## 相关概念
-
+## 关系网络
 - [[位置编码]] — RoPE 是现代位置编码的重要类型
 - [[Transformer架构]] — RoPE 服务于 Transformer 注意力层
 - [[注意力机制]] — RoPE 直接改变 Q/K 内积
 - [[kv-cache|KV Cache]] — RoPE 需与自回归缓存位置一致
-- [[flash-attention|Flash Attention]] — 高效注意力实现中常集成 RoPE kernel
-- [[奇异值]] — 二者都涉及线性变换的几何直觉；RoPE 是保长度旋转，奇异值描述拉伸
+- [[flash-attention|Flash Attention]] — 工程实现可把位置旋转与注意力前后的 kernel 融合，但两者是独立概念
 
 ---
 
 ## 参考资料
 
-- Su et al., RoFormer: Enhanced Transformer with Rotary Position Embedding, arXiv:2104.09864
-- EleutherAI Blog: Rotary Embeddings, A Relative Revolution
-- HuggingFace RoFormer documentation
-- DeepSeek-V4 技术报告中 partial RoPE 与 CSA/HCA 相关说明
+- [RoFormer: Enhanced Transformer with Rotary Position Embedding](https://arxiv.org/abs/2104.09864) — RoPE 原始论文
+- [YaRN: Efficient Context Window Extension of Large Language Models](https://arxiv.org/abs/2309.00071) — RoPE 长上下文缩放方法
+- [LongRoPE: Extending LLM Context Window Beyond 2 Million Tokens](https://arxiv.org/abs/2402.13753) — 非均匀位置插值与继续训练方案
 
 ---

@@ -1,424 +1,347 @@
 # Progressive-KG Schema
 
-> 渐进式知识图谱的结构约定、层级规则、链接规范与维护协议。
-> 本文件是 Agent 和人类共同遵守的知识维护契约。
+> 渐进式个人知识图谱的结构契约。本文件同时约束人类、Agent、模板和校验脚本。
 
-**版本**: 1.0  
-**创建**: 2026-07-01  
-**维护者**: Damon + Nemesis
+**版本**：1.1
+
+**创建**：2026-07-01
+
+**更新**：2026-07-17
+**维护者**：Damon + Agent
 
 ---
 
-## 1. 核心模型：三层渐进式披露（一对多树状展开）
+## 1. 两个相互独立的层级
 
-每个知识概念按三个层级组织，每一层对下一层是一对多关系：
+本库同时存在“导航层级”和“内容披露层级”，两者不能混用。
 
-```
-Level 1 — 定义层（一个概念 → 一句话定义 + 多个 Level 2 子主题链接）
-  │
-  ├── Level 2 — 要点层（一个子主题 → 一段话 + bullets + 多个 Level 3 细节）
-  │     │
-  │     ├── Level 3 — 细节层（推导、代码、图示、证明、引用...）
-  │     ├── Level 3
-  │     └── Level 3
-  │
-  ├── Level 2
-  │     ├── Level 3
-  │     └── Level 3
-  │
-  └── Level 2
-        └── Level 3
+### 1.1 导航层级
+
+```text
+Home → Domain MOC → Subdomain MOC → Note
 ```
 
-### Level 1 — 定义层
+- Home 只负责全库入口、最近修改和复核队列。
+- Domain MOC 负责子域导航，不把所有后代概念无分组地平铺出来。
+- Subdomain MOC 只列出当前目录中的直接概念。
+- Note 是最终阅读单元。
 
-- **形态**：概念笔记文件的 frontmatter `summary` 字段 + 文件开头的 blockquote
-- **内容**：一句话定义（目标 ≤50 字，允许 40-60 字），说清"是什么"，不能以省略号截断
-- **交互**：MOC 中通过 Dataview 渲染为表格行；Obsidian hover 预览自动显示
-- **一对多**：一个概念展开为多个 Level 2 子主题（`##` 标题）
+### 1.2 单页三层渐进披露
 
-### Level 2 — 要点层
+```text
+L1 定义 → L2 子主题概览 → L3 深入细节
+```
 
-- **形态**：概念笔记内的 `##` 标题段落
-- **内容**：一段话概述 + 3-5 个 bullet points（关键性质、适用条件、核心公式）
-- **交互**：打开文件即见；Obsidian 中可通过 `[[概念名#子主题]]` 直接链接
-- **一对多**：一个子主题展开为多个 Level 3 细节（`###` 标题或正文内容）
-
-### Level 3 — 细节层
-
-- **形态**：`##` 标题下的 `###` 子标题 + 正文内容
-- **内容**：完整推导、代码示例、图表、证明过程、参考文献链接
-- **交互**：滚动展开；如内容极长可拆为独立文件并链接
-- **终止层**：不再下钻
-
-### 渐进披露的物理实现
-
-单文件 + Obsidian 原生功能，无需额外插件：
-
-| 层级 | 物理位置 | Obsidian 交互 |
+| 层级 | 物理位置 | 目的 |
 |---|---|---|
-| Level 1 | frontmatter `summary` + 文件首行 blockquote | MOC Dataview 表格 / hover 预览 |
-| Level 2 | `##` 标题 + 其下第一段 + bullets | 打开文件即见 / `[[file#section]]` 精确链接 |
-| Level 3 | `###` 标题下的完整正文 | 滚动展开 / 点击折叠区 |
+| L1 | frontmatter `summary` + 标题后的定义引用框 | 10 秒内知道“它是什么” |
+| L2 | `##` 子主题及开头概述 | 1 分钟掌握主干 |
+| L3 | `###`、推导、代码、图表、证据 | 按需深入 |
+
+概念页的正文使用 Obsidian 原生 Markdown；动态 MOC 和仪表盘依赖 Dataview。CSS 只增强视觉，不承载语义。
 
 ---
 
-## 2. 文件结构
+## 2. 页面类型
 
-```
-progressive-kg/
-├── SCHEMA.md                # 本文件——结构约定与维护契约
-├── home.md                  # 入口页，链接到各域 MOC
-├── log.md                   # 变更日志（append-only）
-│
-├── Cognition/               # 认知域
-│   ├── _moc.md              # 域级 MOC（Dataview 渲染 Level 1）
-│   ├── Math/
-│   │   ├── _moc.md          # 子域 MOC
-│   │   ├── 正交.md           # 概念笔记（Level 1+2+3）
-│   │   ├── 内积.md
-│   │   └── ...
-│   ├── Model/
-│   │   ├── _moc.md
-│   │   └── ...
-│   └── ...
-│
-├── Skill/                   # 技能域
-├── Language/                # 语言域
-├── Meta/                    # 元认知域
-├── Horizon/                 # 探索域
-│
-├── comparisons/             # 跨域对比分析
-├── queries/                 # 有价值的查询结果归档
-│
-├── raw/                     # 原始素材（不可变，Agent 只读）
-│   ├── human_ai_knowledge/  # 人机知识文章（迁移）
-│   ├── articles/            # 外部文章
-│   └── papers/              # 论文
-│
-└── _system/                 # 系统文件（不参与知识图谱）
-    ├── templates/
-    │   ├── concept.md       # 概念笔记模板
-    │   └── moc.md           # MOC 模板
-    ├── lint.py              # 健康检查脚本
-    └── migrate.py           # 迁移脚本
-```
+frontmatter 使用 `type` 表示页面类型，不再使用容易与 L1/L2/L3 混淆的 `level`。
 
-### 命名约定
+| `type` | 用途 | 默认目录 |
+|---|---|---|
+| `concept` | 可复用的事实性知识概念 | Cognition、Language |
+| `procedure` | 可执行技能、流程和检查表 | Skill |
+| `hypothesis` | 尚待证据支持的观点或研究假设 | Horizon |
+| `question` | 待探索问题 | Horizon/questions |
+| `experiment` | 验证假设的实验记录 | Horizon/experiments |
+| `review` | 复盘、审阅和变更决策 | Meta/reviews |
+| `moc` | 目录地图 | 各目录 `_moc.md` |
 
-- **概念笔记**：中文名或英文名，不加编号。如 `正交.md`、`flash-attention.md`
-- **MOC 文件**：`_moc.md`（下划线前缀，Obsidian 中排在目录最前）
-- **系统文件**：`_` 前缀目录（`_system/`），不参与图谱
-- **raw 文件**：保持原始文件名，不做重命名
+`raw/` 是不可变来源层，不要求统一 frontmatter，也不参与概念页结构校验。
 
 ---
 
-## 3. Frontmatter 规范
-
-每个概念笔记必须包含以下 YAML frontmatter：
+## 3. 概念页 Frontmatter
 
 ```yaml
 ---
-title: 正交                          # 概念名（与文件名一致，不含 .md）
-summary: 两向量内积为零，方向独立互不影响  # Level 1：一句话定义（目标≤50字，允许40-60字，不可省略号截断）
-level: concept                        # 节点类型：concept | moc | raw | meta
-category: Cognition/Math              # 域/子域路径
-tags: [线性代数, 内积, 正交初始化]      # 标签（用于跨域聚类）
-related: [[内积]], [[外积]], [[Muon优化器]]  # 强关联概念（双向链接）
-created: 2026-04-21                   # 创建日期
-last_verified: 2026-07-01             # 最后验证日期（lint 时更新）
-confidence: high                      # high | medium | low
-status: stable                        # stable | draft | stale | contested
-sources:                              # Level 3 的原始素材来源
-  - raw/human_ai_knowledge/standardization-ml-dl-rl.md
+schema_version: 1.1
+title: 正交
+aliases: [Orthogonality, 正交性]
+summary: 两个向量内积为零时称为正交，表示它们在给定内积下彼此垂直
+type: concept
+maturity: evergreen
+confidence: high
+tags: [线性代数, 内积]
+created: 2026-04-21
+updated: 2026-07-16
+verified: 2026-07-16
+review_due: 2027-07-16
+sources:
+  - https://example.org/primary-source
 ---
 ```
 
-### 字段说明
+### 3.1 字段定义
 
-| 字段 | 必填 | 用途 |
+| 字段 | 必填 | 规则 |
 |---|---|---|
-| `title` | ✅ | 概念名，与文件名一致 |
-| `summary` | ✅ | Level 1 定义，MOC 中渲染 |
-| `level` | ✅ | 节点类型，决定 MOC 查询过滤 |
-| `category` | ✅ | 域路径，用于目录组织和 MOC 分组 |
-| `tags` | ✅ | 跨域标签，用于 Dataview 聚类查询 |
-| `related` | ✅ | 强关联概念，构建双链网络 |
-| `created` | ✅ | 创建日期 |
-| `last_verified` | ✅ | 最后验证日期，lint 时检查是否过时 |
-| `confidence` | ⬜ | 置信度，low 的优先 review |
-| `status` | ⬜ | 状态标记，stale/contested 需要人工审阅 |
-| `sources` | ⬜ | Level 3 内容的原始来源，可追溯 |
+| `schema_version` | 是 | 当前固定为 `1.1` |
+| `title` | 是 | 人类可读显示名；允许与文件名不同 |
+| `aliases` | 是 | 搜索别名；允许空列表，所有别名必须全库唯一 |
+| `summary` | 是 | 一句话完整定义；建议 25–50 字，硬上限 60 字，不用省略号截断 |
+| `type` | 是 | 使用第 2 节中的枚举 |
+| `maturity` | 是 | `seed`、`growing`、`evergreen` |
+| `confidence` | 是 | `low`、`medium`、`high`，表示证据置信度而非完成度 |
+| `tags` | 是 | 允许空列表；只用于跨目录聚类，不重复目录分类 |
+| `created` | 是 | 首次形成此笔记的日期 |
+| `updated` | 是 | 最近一次内容修改日期 |
+| `verified` | 条件必填 | 完成事实和来源核验的日期；未核验时留空 |
+| `review_due` | 条件必填 | 下一次建议复核日期；`evergreen` 必填 |
+| `sources` | 是 | 来源列表；允许 seed/hypothesis 暂时为空 |
+
+目录位置是唯一分类来源，概念页不再维护易漂移的 `category` 字段。Dataview 使用 `file.folder` 获取所属域。
+
+### 3.2 生命周期
+
+- `seed`：刚捕获，结构或来源可能不完整。
+- `growing`：主干已形成，仍需补充关系、来源或细节。
+- `evergreen`：定义、关键边界和来源已核验，可稳定复用。
+
+任何内容修改都更新 `updated`；只有实际核对定义、关键论断和来源后才能更新 `verified`。迁移和格式化不得冒充事实核验。
+
+`review_due` 由知识波动性决定，不设全库统一 90 天：数学基础可按年复核，快速变化的模型和工具可按 30–180 天复核。
 
 ---
 
-## 4. 概念笔记结构规范
-
-每个概念笔记的正文按以下结构组织：
+## 4. 概念页正文结构
 
 ```markdown
----
-（frontmatter）
----
-
 # 概念名
 
-> 一句话定义（与 frontmatter summary 一致）。
+> 与 frontmatter summary 文字一致的定义。
 
 ---
 
-## 子主题 A                    ← Level 2（一对多中的"多"之一）
+## 子主题 A
 
-一段话概述这个子主题是什么、为什么重要。
+一段能够独立说明该分支是什么、为何重要的概述。
 
-- **要点 1**：关键性质或公式
-- **要点 2**：适用条件
-- **要点 3**：与其他概念的关系
+- 关键性质
+- 适用条件
+- 主要边界
 
-### 细节项 A1                  ← Level 3（一对多中的"多"之一）
-（完整推导 / 代码 / 图表...）
+### 深入细节 A1
 
-### 细节项 A2
-（...）
+推导、代码、图表、例子或证据。
 
 ---
 
-## 子主题 B                    ← Level 2
+## 子主题 B
 
-一段话概述。
-
-- **要点 1**
-- **要点 2**
-
-### 细节项 B1                  ← Level 3
-（...）
+概述后可以使用 bullets、表格、公式或代码，不强制固定形式。
 
 ---
 
 ## 关系网络
 
-- 依赖 [[概念X]] — 说明依赖关系
-- 扩展到 [[概念Y]] — 说明扩展方向
-- 应用于 [[概念Z]] — 说明应用场景
+- 前置：[[概念A]] — 说明依赖关系
+- 对比：[[概念B]] — 说明关键差异
+- 应用：[[概念C]] — 说明使用场景
 
 ---
 
 ## 参考资料
 
-- [来源名称](链接或路径)
-- [[raw/原始素材文件]]
+- [来源标题](URL) — 该来源支持什么
 ```
 
-### 结构规则
+### 4.1 结构规则
 
-1. **Level 1**：文件开头的 blockquote，与 `summary` 一致
-2. **Level 2**：每个 `##` 标题是一个子主题，必须有一段话 + bullets
-3. **Level 3**：每个 `##` 下可以有多个 `###` 细节项，是完整内容
-4. **`---` 分隔线**：Level 2 之间用 `---` 分隔，视觉上区分树状分支
-5. **关系网络**：放在正文末尾，集中列出 `[[双链]]`
-6. **参考资料**：链接到 raw/ 目录的原始素材
+1. `summary` 是 L1 的规范来源；正文定义框是受 lint 约束的镜像，不能独立改写。
+2. 禁止再使用 `## 概念` 或 `## 定义` 重复 L1。
+3. 普通 L2 必须可独立理解：优先用一句简短概述；若列表、表格、公式或代码本身已构成清晰概览，也可直接作为引导。L2 不能无过渡地直接跳入 L3，并至少包含一种展开形式（结构块、L3 或多个实质段落）。
+4. L3 仅在确实需要下钻时使用，不强制每个 L2 都创建 `###`。
+5. `关系网络`、`参考资料`、`变更记录`、`记忆口诀`、`记忆要点` 是辅助章节，不计入 L2 内容完整度。
+6. `---` 是可选视觉分隔符，不作为结构语义。
 
-### 参考资料链接格式
+### 4.2 拆分规则
 
-来自 human_ai_knowledge 的源文件同时提供本地 MD 链接和 GitHub Pages HTML 链接：
+满足任一条件时，将子主题升级为独立概念页：
 
-```markdown
-- [[raw/human_ai_knowledge/filename.md]] | [🌐 HTML](https://wolfhawkld.github.io/human_ai_knowledge/filename.html) — 说明文字
-```
+- 本身可独立定义并被多个页面引用；
+- 单个 L2 超过约 200 行或含 3 个以上大型 L3；
+- 与父概念具有不同的复核周期或来源集合。
 
-仅本地有 MD 文件（如 2nd_brain 源文件）的只放 wikilink：
-
-```markdown
-- [[raw/human_ai_knowledge/filename.md]] — 说明文字
-```
-
-### 何时拆分为独立文件
-
-当一个 Level 2 子主题满足以下任一条件时，应拆为独立文件：
-- 有 3 个以上 Level 3 细节项且总长超过 200 行
-- 被其他概念笔记独立引用（跨概念链接）
-- 本身是一个可独立成立的概念
-
-拆分时：
-- 新文件名：`父概念-子主题.md`（如 `正交-正交矩阵.md`）
-- 父概念文件中该子主题改为：`## [正交矩阵](正交-正交矩阵.md)`
-- 子文件 frontmatter 加 `parent: [[正交]]`
+父页保留简要概述，并链接到新概念；避免在父子页面复制同一份完整内容。
 
 ---
 
-## 5. MOC 文件规范
+## 5. 链接与关系
 
-MOC（Map of Content）是 Level 1 的渲染层，用 Dataview 自动从概念笔记的 frontmatter 生成。
+### 5.1 链接规则
 
-### 域级 MOC（`_moc.md`）
+- 链接目标必须使用真实文件名：`[[kv-cache|KV Cache]]`。
+- 标题和别名用于显示与搜索，不作为猜测文件名的依据。
+- 子主题链接使用 `[[概念文件#子主题|显示名]]`。
+- raw 来源使用存在的仓库相对路径：`[[raw/human_ai_knowledge/file.md]]`。
+- 不存在的未来概念不能写成 wikilink；使用 `待建：概念名`，并在 Horizon 中登记。
 
-```markdown
+### 5.2 关系网络
+
+`## 关系网络` 是概念关系的唯一人工维护位置，不再在 frontmatter 重复维护 `related`。
+
+推荐关系标签：`前置`、`组成`、`对比`、`扩展`、`应用`、`相关`。`growing` 和 `evergreen` 页面至少应有 2 个指向现有概念的关系；seed 可以暂时较少。
+
 ---
+
+## 6. 来源与证据
+
+- 事实性 `concept`/`procedure` 达到 `evergreen` 前必须至少有一个可访问来源。
+- 快速变化的技术优先使用官方文档、规范或原始论文，并记录版本或日期。
+- `hypothesis` 必须明确区分“观察”“推断”“待验证问题”，不能用 `high` 置信度代替证据。
+- `sources` 保存机器可读地址；`## 参考资料` 可补充来源作用、章节和限制。
+- raw 文件不可由 Agent 静默改写；需要修订时创建新版本或评注页。
+
+---
+
+## 7. MOC 与首页
+
+MOC frontmatter：
+
+```yaml
+---
+schema_version: 1.1
 title: 数学概念地图
-level: moc
-category: Cognition/Math
+type: moc
+scope: Cognition/Math
 ---
-
-# 数学概念地图
-
-## 概念索引
-
-```dataview
-TABLE summary AS "定义", last_verified AS "验证日期", status AS "状态"
-FROM "Cognition/Math"
-WHERE level = "concept"
-SORT title ASC
 ```
 
-## 按标签聚类
+子域 MOC 只查询直接目录：
 
 ```dataview
-TABLE summary AS "定义"
-FROM "Cognition/Math"
-WHERE contains(tags, "线性代数")
-SORT title ASC
-```
-
-## 待审阅
-
-```dataview
-TABLE summary AS "定义", last_verified AS "验证日期"
-FROM "Cognition/Math"
-WHERE level = "concept" AND (status = "stale" OR status = "draft" OR confidence = "low")
-SORT last_verified ASC
-```
-```
-
-### home.md
-
-```markdown
-# 🏠 Progressive-KG
-
-## 域导航
-
-- [[Cognition/_moc|🧠 认知]] — 数学、模型、工作、生活
-- [[Skill/_moc|⚡ 技能]] — 编程、写作、管理
-- [[Language/_moc|📝 语言]] — 学术英语
-- [[Meta/_moc|🔮 元认知]] — 方法论、复盘
-- [[Horizon/_moc|🔭 探索]] — 待探索问题、实验记录
-
-## 最近更新
-
-```dataview
-TABLE summary AS "定义", last_verified AS "验证日期"
+TABLE summary AS "定义", maturity AS "成熟度", verified AS "已核验"
 FROM ""
-WHERE level = "concept"
-SORT last_verified DESC
-LIMIT 10
-```
+WHERE file.folder = this.scope AND type != "moc"
+SORT title ASC
 ```
 
----
-
-## 6. 链接规范
-
-### 双链（`[[wikilink]]`）
-
-- **概念间链接**：`[[概念名]]` 或 `[[概念名|显示文本]]`
-- **子主题链接**：`[[概念名#子主题]]`（链接到 Level 2）
-- **raw 链接**：`[[raw/文件名]]`（链接到原始素材）
-
-### 链接密度规则
-
-- 每个概念笔记的"关系网络"节至少有 2 个出链
-- 每个 Level 2 子主题正文中至少有 1 个相关概念链接
-- 孤儿页（无入链的概念）会被 lint 标记
+域级 MOC 应先显式列出子域入口，再提供可选的全域聚合视图。首页“最近更新”按 `updated` 排序；复核队列按 `review_due`、空来源和低置信度排序。
 
 ---
 
-## 7. 维护协议
+## 8. 自我进化闭环
 
-### Ingest（摄入新概念）
+```text
+raw / 对话 / 观察
+        ↓
+seed 候选页
+        ↓
+结构 lint + 去重 + 链接建议
+        ↓
+来源核验 / 实验验证
+        ↓
+人工批准为 growing 或 evergreen
+        ↓
+review_due 到期或依赖变化
+        ↓
+生成变更提案与 diff，再次批准
+```
 
-1. 确认概念所属域和子域
-2. 用 `_system/templates/concept.md` 创建新文件
-3. 填写 frontmatter（`summary` 必须是一句话定义）
-4. 写 Level 2 子主题（至少 2 个）和 Level 3 细节
-5. 在关系网络中链接到至少 2 个相关概念
-6. 更新所属域的 `_moc.md`（Dataview 自动渲染，无需手动改）
-7. 在 `log.md` 追加：`## [YYYY-MM-DD] ingest | 概念名`
+Agent 可以自动发现问题、生成候选页和提出 diff，但不得在没有可追溯记录的情况下静默改写 evergreen 事实。
 
-### Update（更新已有概念）
+### 8.1 Ingest
 
-1. 修改内容，bump `last_verified` 为当天
-2. 如新增子主题，确保 `##` 结构完整
-3. 如拆分独立文件，更新父文件的链接
-4. 在 `log.md` 追加：`## [YYYY-MM-DD] update | 概念名 — 变更摘要`
+1. 搜索文件名、标题和 aliases，避免重复概念。
+2. 使用模板创建 `seed` 页面，填写来源或 origin。
+3. 写 L1、至少两个 L2，并建立已有概念关系。
+4. 运行 lint，通过后在 `log.md` 追加记录。
 
-### Lint（健康检查）
+#### 候选节点与占位规则
 
-由 `_system/lint.py` 执行，检查项：
+- 不创建 `summary: TBD`、仅有标题或仅有关系链接的空概念文件；空壳会让图谱看似连通，却没有可复用知识。
+- 已有最小定义和主干时，创建 `maturity: seed` 页面：L1 必须是有效定义，正文至少有一个实质 L2，并以两个 L2 为 ingest 目标；来源可以暂时为空。
+- 信息不足以形成 L1 时，不创建概念页：在 `Horizon/questions/` 登记待探索问题，并在正文用 `待建：概念名`，不写未解析 wikilink。
+- 旧版 `status: placeholder` 迁移为 `seed` 只是生命周期映射，仍须补齐定义和正文才能通过 lint；Agent 不得通过跳过校验让占位永久化。
 
-| 检查项 | 规则 | 严重度 |
-|---|---|---|
-| 孤儿页 | 无入链的概念笔记 | warning |
-| 断链 | `[[wikilink]]` 指向不存在的文件 | error |
-| 缺失 frontmatter | 必填字段缺失 | error |
-| 过时节点 | `last_verified` 超过 90 天 | warning → 标记 `status: stale` |
-| 缺少出链 | "关系网络"节出链 < 2 | warning |
-| 文件过长 | 超过 300 行且未拆分 | info |
-| 标签外溢 | 使用了未在 SCHEMA 中定义的域 | info |
+### 8.2 Update
 
-lint 结果输出到 `_system/lint-report.md`，并追加到 `log.md`。
+1. 修改内容并更新 `updated`。
+2. 如完成事实核验，再更新 `verified`、`review_due` 和 `confidence`。
+3. 对 evergreen 修改保留来源和变更摘要。
+4. 运行 lint，并在 `log.md` 追加记录。
 
-### Consolidate（整理合并）
+### 8.3 Review
 
-当 Damon 说"整理 X 域"时：
-1. Agent 扫描该域所有概念笔记
-2. 识别重复概念 → 合并（保留较完整的，迁移链接）
-3. 识别缺失关联 → 建议新链接
-4. 更新所有 `last_verified`
-5. 重建 MOC（Dataview 自动完成）
-6. 在 `log.md` 追加整理记录
-
----
-
-## 8. 迁移规则
-
-### 从 2nd_brain 迁移
-
-1. 保留原目录结构（Cognition/Math/ 等）
-2. 为每个概念笔记添加 frontmatter：
-   - `summary`：从文件第一段或 blockquote 提取
-   - `level: concept`
-   - `category`：根据目录路径生成
-   - `tags`：从文件末尾的标签行提取
-   - `created`：从文件末尾的创建时间提取
-   - `last_verified`：设为迁移当天
-3. 将 `moc.md` 重命名为 `_moc.md`，替换内容为 Dataview 查询
-4. 在 `log.md` 记录迁移
-
-### 从 human_ai_knowledge 迁移
-
-1. 将 48 篇 .md 文件复制到 `raw/human_ai_knowledge/`（不可变层）
-2. 为每篇有独立概念价值的文章创建概念笔记
-3. 概念笔记的 `sources` 字段链接到 raw 文件
-4. 概念笔记只提取 Level 1+2（定义 + 要点），Level 3 链接到 raw 原文
-5. 在 `log.md` 记录迁移
+1. 从首页复核队列选择页面。
+2. 检查来源可访问性、关键论断、断链和重复内容。
+3. 在 `Meta/reviews/` 记录有实质判断的复核。
+4. 通过后调整 maturity；未通过则保留 seed/growing 并写明缺口。
 
 ---
 
-## 9. 与 Agent 的交互约定
+## 9. Lint 契约
 
-| 操作 | 触发方式 | Agent 行为 |
-|---|---|---|
-| Ingest | Damon 说"记录概念 X" | 读素材 → 生成概念笔记 → 更新 log |
-| Query | Damon 问"X 和 Y 的关系" | 读 MOC → 读 Level 2 → 合成答案 → 有价值则归档到 queries/ |
-| Lint | Hermes cron 每周 | 跑 lint.py → 标记过时 → 报告 |
-| Consolidate | Damon 说"整理 X 域" | 扫描 → 合并重复 → 更新链接 → 重建 MOC |
-| Migrate | Damon 说"迁移 2nd_brain" | 运行 migrate.py → 批量加 frontmatter |
+`_system/lint.py` 至少检查：
 
-Agent 操作前必须先读 SCHEMA.md（本文件）和目标域的 _moc.md，避免创建重复概念。
+| 检查项 | 严重度 |
+|---|---|
+| YAML 无法解析、必填字段缺失、非法枚举 | error |
+| 断开的 wikilink、raw 链接或本地 Markdown 链接 | error |
+| MOC scope 与目录不一致 | error |
+| L1 定义缺失或与 summary 不一致 | error |
+| `TBD` 等占位定义或无实质 L2 的空知识节点 | error |
+| 文件名、title、alias 发生全库歧义 | error |
+| growing/evergreen 关系不足或 evergreen 无来源 | warning/error |
+| verified/review_due 生命周期不一致 | warning |
+| 普通 L2 缺少概述或展开内容 | warning |
+| 空标签、可复用知识页的孤儿、建议拆分 | info/warning |
+
+lint 默认只读并输出终端报告；只有显式 `--report` 才写 `_system/lint-report.md`，只有显式修复命令才能改内容。
 
 ---
 
-## 10. 版本历史
+## 10. 目录约定
+
+```text
+progressive-kg/
+├── home.md
+├── SCHEMA.md
+├── log.md
+├── Cognition/
+├── Skill/
+├── Language/
+├── Meta/
+│   └── reviews/
+├── Horizon/
+│   ├── questions/
+│   └── experiments/
+├── comparisons/
+├── queries/
+├── raw/
+└── _system/
+    ├── templates/
+    │   ├── concept.md
+    │   ├── moc.md
+    │   └── review.md
+    ├── lint.py
+    ├── migrate_schema_v1_1.py
+    ├── requirements.txt
+    ├── tests/
+    └── snippets/
+```
+
+- 文件名使用稳定、简洁的概念名；显示名和外文名放入 `title`/`aliases`。
+- `_moc.md` 固定作为目录入口。
+- `comparisons/` 和 `queries/` 保存有复用价值的综合产物，不复制概念页正文。
+- `log.md` 只追加有意义的知识库操作，不记录每次无变化的定时检查。
+
+---
+
+## 11. 版本历史
 
 | 日期 | 版本 | 变更 |
 |---|---|---|
-| 2026-07-01 | 1.0 | 初始版本，定义三层渐进披露模型、文件结构、frontmatter、MOC、链接、维护协议 |
+| 2026-07-01 | 1.0 | 建立三层披露、frontmatter、MOC 和维护协议 |
+| 2026-07-16 | 1.1 | 分离导航与披露层级；引入 type、maturity、updated/verified/review_due；放宽 L2；统一关系、来源和自我进化闭环 |
+| 2026-07-17 | 1.1 | 明确禁止永久空占位；候选概念使用 seed，信息不足时转入 Horizon 问题队列 |

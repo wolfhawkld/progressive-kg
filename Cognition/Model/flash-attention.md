@@ -1,158 +1,109 @@
 ---
+schema_version: '1.1'
 title: Flash Attention
-summary: 高效注意力计算算法，通过代理值技巧和分块计算减少 HBM 读写，加速训练和推理
-level: concept
-category: Cognition/Model
-tags: []
-related:
-- '[[kv-cache]]'
-created: 2026-07-08
-last_verified: 2026-07-08
-confidence: medium
-status: draft
+aliases:
+- FlashAttention
+- Flash-Attention
+summary: 通过分块和在线 Softmax 减少显存读写、且不物化完整注意力矩阵的精确注意力算法
+type: concept
+maturity: growing
+confidence: high
+tags:
+- 注意力机制
+- GPU
+- 推理优化
+created: '2026-07-08'
+updated: '2026-07-16'
+verified: '2026-07-16'
+review_due: '2026-10-16'
+sources:
+- https://arxiv.org/abs/2205.14135
+- https://arxiv.org/abs/2307.08691
+- https://arxiv.org/abs/2407.08608
 ---
+
 # Flash Attention
 
-> Flash Attention 是一种高效的注意力计算算法，通过 **代理值技巧 + 分块计算（Tiling）** 将 softmax 从 3-pass 算法压缩到 1-pass，显著减少 Transformer 模型在长序列上的内存读写次数。
+> 通过分块和在线 Softmax 减少显存读写、且不物化完整注意力矩阵的精确注意力算法。
 
----
+## 核心定义
 
-核心原理：从 3-pass 到 1-pass
+FlashAttention 是一种 IO-aware 的精确注意力算法。它把 Q、K、V 分块搬入片上 SRAM，在块内计算，并以在线 Softmax 状态逐步合并结果，从而避免把完整的 $N\times N$ 注意力分数和概率矩阵写回高带宽显存（HBM）。
 
-### 标准 Softmax：3-pass 算法
+这里的“精确”指它计算的是标准注意力，而不是稀疏或低秩近似；由于浮点运算重排，数值末位仍可能与朴素实现不同。
 
-传统 softmax 需要遍历三次所有元素：
+## 为什么能加速
 
-| 趟数 | 操作 | 说明 |
-|-----|------|------|
-| 第1趟 | 求 $d = \max(a_i)$ | 需遍历全部元素 |
-| 第2趟 | 求 $s = \sum e^{a_i - d}$ | 需遍历全部元素 |
-| 第3趟 | 计算 $y_i = \frac{e^{a_i - d}}{s}$ | 得到最终结果 |
+标准注意力为：
 
-公式：
-$$y_i = \frac{e^{a_i - d}}{\sum_{j=1}^{L} e^{a_j - d}}$$
+$$
+O=\operatorname{softmax}\left(\frac{QK^T}{\sqrt d}\right)V
+$$
 
-其中减去 $d$（最大值）是为了数值稳定，避免指数溢出。
+朴素实现往往把 $QK^T$、Softmax 概率等 $O(N^2)$ 中间结果写入 HBM，再为后续操作读回。GPU 上这些数据搬运可能比矩阵乘本身更限制速度。
 
-### 引入代理值：2-pass 算法
+FlashAttention 的关键不是减少标准注意力的算术量，而是让中间结果尽量停留在更快但更小的片上存储中，并减少 HBM 往返。
 
-关键优化：引入**代理值** $s_k$，不再需要先遍历得到最大值。
+## 在线 Softmax
 
-定义：
-- $d_k$：第 k 个 chunk 的最大值
-- $s_k$：第 k 个 chunk 的指数和代理值
+对一行分数分块处理时，维护有限维状态：
 
-**代理值的递推关系**：
-$$s_k = s_{k-1} \cdot e^{d_{k-1} - d_k} + \sum_{i=kN+1}^{(k+1)N} e^{a_i - d_k}$$
+- $m$：目前见过的最大值
+- $\ell$：以 $m$ 为基准缩放后的指数和
+- $o$：对应的未归一化输出累加器
 
-这个公式的关键：当遍历完所有 chunks 后，$s_{\text{last}}$ 等于真实的指数和。
+读入新块并得到局部最大值 $m_b$ 后，先令 $m'=\max(m,m_b)$，再把旧状态按 $e^{m-m'}$ 缩放，把新块贡献按 $e^{m_b-m'}$ 合并。这样无需预先看到整行，也能得到数值稳定的 Softmax 归一化结果。
 
-**2-pass 算法流程**：
-| 趟数 | 操作 |
-|-----|------|
-| 第1趟 | 同时求 $d_k$ 和 $s_k$（边遍历边更新） |
-| 第2趟 | 计算最终值 $y_i = \frac{e^{a_i - d}}{s_{\text{last}}}$ |
+这个有限状态使得每个 Query 块可以依次扫描 K/V 块，而不必保存完整注意力矩阵。
 
-### Flash Attention：1-pass 算法
+## 分块执行
 
-对于 attention 计算，还可以再引入一个代理值 $o_k$，将 2-pass 压缩为 1-pass。
+典型前向过程是：
 
-定义：
-- $o_k$：第 k 个 chunk 的输出代理值
+1. 从 HBM 载入一个 Q 块。
+2. 依次载入 K/V 块，在 SRAM 中计算局部分数与局部输出。
+3. 用运行中的最大值、归一化因子和输出累加器合并各块。
+4. 只把最终输出和反向传播所需的少量统计量写回 HBM。
 
-Attention 公式（第 k 个 chunk）：
-$$o_k = \sum_{i \in \text{chunk}_k} \frac{e^{a_i - d_k}}{s_k} \cdot v_i$$
+片上工作集由块大小控制，但总计算仍随序列长度增长：每个 Q 块仍需扫描相关 K/V 块。因此它没有与序列长度“完全解耦”。
 
-**输出代理值的递推关系**：
-$$o_k = o_{k-1} \cdot \frac{s_{k-1}}{s_k} \cdot e^{d_{k-1} - d_k} + \sum_{i=kN+1}^{(k+1)N} \frac{e^{a_i - d_k}}{s_k} \cdot v_i$$
+## 复杂度与边界
 
-**关键性质**：
-- 代理值当前 chunk 和前一 chunk 存在递推关系
-- 当遍历完所有 chunks 后，$o_{\text{last}}$ 就是最终输出
+| 指标 | 朴素标准 Attention | FlashAttention |
+|---|---:|---:|
+| 算术复杂度 | $O(N^2d)$ | $O(N^2d)$ |
+| 额外注意力矩阵内存 | $O(N^2)$ | $O(N)$ 级行统计与输出状态 |
+| HBM 交互 | 反复物化、读写中间矩阵 | 通过 tiling 显著减少中间读写 |
+| 数学算子 | 标准精确注意力 | 标准精确注意力 |
 
-**1-pass 算法流程**：
-一次遍历中同时更新：
-- $d_k$（当前 chunk 最大值）
-- $s_k$（指数和代理值）
-- $o_k$（输出代理值）
+实际加速取决于序列长度、head dimension、掩码、数据类型、GPU 架构和 kernel 实现；不能概括成固定倍数，也不能保证所有形状都从 memory-bound 变为 compute-bound。
 
-遍历结束后，$o_{\text{last}}$ 就是最终输出，**一步到位**。
+## 版本脉络
 
-## 分块实现
+| 工作 | 主要贡献 |
+|---|---|
+| FlashAttention | 提出 IO-aware tiling 与精确注意力 kernel |
+| FlashAttention-2 | 改进工作划分和并行化，减少非矩阵乘开销 |
+| FlashAttention-3 | 面向 Hopper 异步执行与低精度能力进一步优化 |
 
-### 为什么需要分块？
+这张表描述论文脉络，不表示所有框架、硬件或算子组合都自动使用相同实现。
 
-序列长度 $L$ 很大时，单次无法载入全部数据。利用矩阵分块：
+## 可迁移的模式
 
-- Q、K、V、O 都进行分块（chunk size = $N$）
-- 每次载入一个 chunk，在 SRAM 中完成计算
-- 关键：**整个过程只和 chunk size $N$ 有关，和序列长度 $L$ 完全解耦**
+FlashAttention 体现的是“分块 + 可合并的流式状态”：如果全局归约可以由固定大小状态递推，就可能避免物化大中间张量。在线 Softmax、Welford 方差计算等都具有这种结构；但具体能否加速仍取决于数据复用和硬件内存层次。
 
-### 分块后的算法
+- 先证明局部状态能够无损合并。
+- 再设计块大小，使工作集适配片上存储。
+- 最后用真实 shape 测量 IO、占用率和重算开销。
 
-对于每个 Q 的 chunk：
-1. 遍历所有 K、V 的 chunks
-2. 每个 chunk 内：
-   - 先求局部最大值 $d_{\text{local}}$
-   - 再与历史最大值比较更新 $d_{\text{new}} = \max(d_{\text{old}}, d_{\text{local}})$
-   - 用递推公式更新 $s_k$ 和 $o_k$
+## 关系网络
 
-**内存交互**：
-- 输入：从 HBM 读取 Q、K、V 分块
-- 输出：直接写入 HBM 的 O 分块
-- 中间结果：不缓存，在 SRAM 中完成
-
-## 性能对比
-
-| 指标 | 传统 Attention | Flash Attention |
-|------|---------------|-----------------|
-| 算法趟数 | 3-pass | 1-pass |
-| 内存占用 | $O(L^2)$（注意力矩阵） | $O(L)$ |
-| HBM 读写次数 | 多次中间读写 | 一次读入、一次写出 |
-| 计算类型 | Memory-bound | Compute-bound |
-
-## 版本演进
-
-| 版本 | 优化点 |
-|------|-------|
-| **Flash Attention v1** | 代理值 + 分块计算 |
-| **Flash Attention v2** | 减少 non-matmul 计算；增加 seqlen 维度并行；Warp Partitioning 优化 |
-| **Flash Attention v3** | FP8 支持；H100 异步优化 |
-
-## 更广泛的 Streaming Reduction 模式
-
-代理值技巧不仅适用于 softmax，很多"全局依赖"算子都可以用类似方法改写：
-
-| 算子 | 代理值 | 递推关系 |
-|------|-------|---------|
-| Online Softmax | $s_k$（指数和） | $s_k = s_{k-1} \cdot e^{d_{k-1} - d_k} + \sum e^{a_i - d_k}$ |
-| LayerNorm | $\tilde{\mu}_k$, $\tilde{\sigma}_k$ | Welford 算法 |
-| Attention Output | $o_k$ | $o_k = o_{k-1} \cdot \frac{s_{k-1}}{s_k} \cdot e^{d_{k-1} - d_k} + ...$ |
-
-**判断标准**：如果算子满足：
-- 可分解为局部贡献
-- 存在有限维状态（与数据规模无关）
-- 状态可合并（有递推关系）
-
-就可以压缩为 streaming/tiling 版本。
-
-## 前置知识
-
-- [[注意力机制]] - 基础注意力计算
-- [[Transformer架构]] - Flash Attention 的应用场景
-- GPU 内存层次（SRAM vs HBM）
-
-## 相关概念
-
-- [[kv-cache]] - KV Cache 与 Flash Attention 配合优化推理
-- PagedAttention - 另一种内存优化技术（vLLM 使用）
+- 前置 [[注意力机制]] — 保持标准注意力定义，只改变执行方式
+- 应用 [[Transformer架构]] — 用于 Transformer 训练、prefill 和部分解码 kernel
+- 对比 [[kv-cache]] — KV Cache 复用跨解码步状态，FlashAttention 优化单次注意力执行
 
 ## 参考资料
 
-- FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness (Tri Dao et al., 2022)
-- Online normalizer calculation for softmax (2018)
-- 李宏毅 ML 2026 Spring：加快語言模型生成速度(1/2)：Flash Attention
-- 从 Online Softmax 到 FlashAttention（腾讯云开发者社区）
-
----
-*参考李宏毅 ML 2026 Spring 课程 · Nemo 整理*
+- [FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness](https://arxiv.org/abs/2205.14135)
+- [FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning](https://arxiv.org/abs/2307.08691)
+- [FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-precision](https://arxiv.org/abs/2407.08608)

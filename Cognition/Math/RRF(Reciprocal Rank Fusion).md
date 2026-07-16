@@ -1,218 +1,106 @@
 ---
+schema_version: '1.1'
 title: RRF（Reciprocal Rank Fusion / 倒数排位融合）
-summary: 基于排名而非分数的多路检索融合算法，通过倒数加权将不同检索系统的排序列表合并为统一排序
-level: concept
-category: Cognition/Math
-tags: []
-related:
-- '[[BM25]]'
-- '[[密集检索(Dense Retrieval)]]'
-- '[[RAG(检索增强生成)]]'
-- '[[交叉编码器(Cross-encoder)]]'
-- '[[排序学习(Learning to Rank)]]'
-created: 2026-04-29
-last_verified: 2026-07-08
-confidence: medium
-status: draft
+aliases:
+- RRF
+- Reciprocal Rank Fusion
+- 倒数排位融合
+summary: 将多路结果的名次转换为倒数贡献并求和，在原始分数不可比时生成统一排序
+type: concept
+maturity: evergreen
+confidence: high
+tags:
+- 信息检索
+- 排序融合
+created: '2026-04-29'
+updated: '2026-07-16'
+verified: '2026-07-16'
+review_due: '2027-07-16'
+sources:
+- https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf
 ---
+
 # RRF（Reciprocal Rank Fusion / 倒数排位融合）
 
-> 一种**基于排名而非分数的多路检索结果融合算法**——通过倒数加权，把不同检索系统产出的排序列表合并为统一排名，无需归一化原始分数。
+> 将多路结果的名次转换为倒数贡献并求和，在原始分数不可比时生成统一排序。
 
----
+## 核心直觉
 
-## 直觉理解
+BM25、向量检索或不同字段检索的原始分数往往不在同一尺度上。RRF 丢弃分数幅度，只用每个候选在各列表中的名次，因此无需先校准异构分数。
 
-RRF 解决的核心问题是：**不同检索系统给出的分数无法直接比较，但排名可以。**
-
-类比场景：
-
-- 语文老师给作文打分（满分 100），数学老师给卷面打分（满分 150）。如果直接加总，数学分数天然占优。
-- RRF 的做法是：**不看绝对分数，看排名**。作文第 1 名、数学第 2 名 → 综合排名靠前，因为「高排名」在不同系统中是一致的信号。
-
-> RRF 的本质：把「第几名」转化成「1/(k+排名)」的贡献值，求和排序。排名越靠前贡献越大，跨系统可比较。
-
----
+代价也来自同一选择：第一名和第二名的原始分数差距无论多大，RRF 只看到它们相差一个名次。
 
 ## 核心公式
 
-$$\text{RRF}(d) = \sum_{i=1}^{N} \frac{1}{k + \text{rank}_i(d)}$$
+$$
+\operatorname{RRF}(d)=\sum_{i=1}^{N}\frac{1}{k+r_i(d)}
+$$
 
 | 符号 | 含义 |
-|------|------|
-| $N$ | 检索系统（结果列表）的数量 |
-| $\text{rank}_i(d)$ | 文档 $d$ 在第 $i$ 路检索中的排名（从 1 开始） |
-| $k$ | 常数，通常取 **60**，控制排名敏感度 |
-| 若 $d$ 不在某路结果中 | 该路贡献为 0 |
+|---|---|
+| $N$ | 排名列表数量 |
+| $r_i(d)$ | 文档 $d$ 在列表 $i$ 中从 1 开始的名次 |
+| $k$ | 平滑超参数 |
+| 未出现 | 该列表贡献 0 |
 
-### k 值的含义
+原始论文实验使用 $k=60$，因此 60 成为常见默认值，但它不是算法定理或所有数据集上的最优值。$k$ 较小时更强调榜首差异；$k$ 很大时，有限深度列表内的名次贡献趋于接近，出现于更多列表的候选更占优势。
 
-| k 值 | 效果 |
-|------|------|
-| **较小（如 k=10）** | 更看重顶部排名差异，第 1 名和第 2 名差距大 |
-| **较大（如 k=60，默认）** | 平滑排名差异，减少极端偏向 |
-| **过大（如 k=1000）** | 所有排名贡献趋近相等，融合失效 |
+## 示例
 
----
+两路列表分别为：
 
-## 具体例子
-
-两路检索结果（向量搜索 V + 关键词搜索 K）：
-
-| 文档 | V 排名 | K 排名 | V 贡献 1/(60+rank) | K 贡献 1/(60+rank) | RRF 得分 |
-|------|--------|--------|-------------------|-------------------|----------|
-| DocA | 1 | 3 | 1/61 ≈ 0.0164 | 1/63 ≈ 0.0159 | **0.0323** |
-| DocB | 2 | 1 | 1/62 ≈ 0.0161 | 1/61 ≈ 0.0164 | **0.0325** 🥇 |
-| DocC | 3 | — | 1/63 ≈ 0.0159 | 0 | 0.0159 |
-| DocD | — | 2 | 0 | 1/62 ≈ 0.0161 | 0.0161 |
-
-DocB 略胜 DocA，因为它在两路都排得极高。DocC 和 DocD 各只在一路出现，排名靠后。
-
----
-
-## 关键性质
-
-| 性质 | 说明 |
-|------|------|
-| **免归一化** | 不需要对 BM25 分数、余弦相似度等做 scale，只看排名 |
-| **排名驱动** | 核心信号是「相对位置」，不是绝对分数值 |
-| **包容缺失** | 某个结果在某路不存在，贡献为 0，不影响排序 |
-| **增强多样性** | 不同检索通道的高排名文档都能浮现 |
-| **对极端 score 鲁棒** | BM25 分数再大，也只看排名，不会主导融合 |
-| **无训练** | 零样本，不需要学习权重 |
-
----
-
-## 与其他融合方法对比
-
-| 方法 | 机制 | 需要归一化？ | 使用分数？ | 适用场景 |
-|------|------|:---:|:---:|------|
-| **RRF** | $1/(k+\text{rank})$ | ❌ | ❌，纯排名 | 多路异构检索融合（默认首选） |
-| **CombSUM** | $\sum \text{norm\_score}_i$ | ✅ | ✅ | 同构系统，分数可比较时 |
-| **CombMNZ** | $\text{CombSUM} \times \text{出现次数}$ | ✅ | ✅ | 强调多系统共同检索到的文档 |
-| **加权平均** | $\sum w_i \cdot \text{norm\_score}_i$ | ✅ | ✅ | 已知各系统可靠性时 |
-| **学习排序** | 训练模型融合 | 可选 | ✅ | 有标注数据时 |
-
----
-
-## 信息检索中的位置
-
-在 RAG（检索增强生成）和现代搜索系统中，典型流程：
-
-```
-用户查询
-    │
-    ├──→ 稠密检索（Dense / 语义向量）
-    ├──→ 稀疏检索（Sparse / BM25 / TF-IDF）
-    ├──→ 多query变体检索
-    │
-    ↓ 各路返回 TopK 排名
-    │
-    ├──→ RRF 融合排序 → 统一 TopK
-    │
-    ├──→ (可选) Cross-encoder 重排序
-    │
-    ↓ 最终结果
+```text
+dense: B, A, C, E
+sparse: A, D, B, F
 ```
 
----
+取 $k=60$：
 
-## 优势与局限
+| 文档 | dense | sparse | RRF |
+|---|---:|---:|---:|
+| A | 2 | 1 | $1/62+1/61\approx0.03252$ |
+| B | 1 | 3 | $1/61+1/63\approx0.03227$ |
+| D | — | 2 | $1/62\approx0.01613$ |
+| C | 3 | — | $1/63\approx0.01587$ |
 
-### 优势
-- **简单可解释**：一个公式，无需 tunable 参数（k 通常固定 60）
-- **即插即用**：不管检索后端是什么，有排名就能融合
-- **处理缺失**：某路没召回不影响计算
-- **被广泛验证**：Azure AI Search、Elasticsearch、LlamaIndex、LangChain 等内置支持
+A 略高于 B。若出现并列名次、重复文档或列表截断，系统还需明确 rank 和去重规则。
 
-### 局限
-- **丢弃分数信息**：rank 1 和 rank 2 的实际 score 可能差 10 倍，RRF 不看
-- **k 值敏感**：不同领域/数据分布的最优 k 可能不同
-- **domain shift 下性能下降**：跨领域时 k=60 不一定最优（Bruch et al., 2022）
-- **不利用 score 幅度**：当各系统分数同分布时，CombSUM 可能更好
+## 优势与限制
 
----
+| 优势 | 限制 |
+|---|---|
+| 不要求原始分数同尺度 | 丢弃分数间隔信息 |
+| 可容纳某路未召回的候选 | 召回深度会决定谁有资格贡献 |
+| 无需训练数据 | $k$、列表权重和截断深度仍是设计选择 |
+| 公式简单、易解释 | 默认等权，不能表达某一路更可靠 |
+
+如果各路得分已经可靠校准，可比较 CombSUM、加权分数融合或学习排序；如果列表质量不同，也可使用 weighted RRF，但权重需要验证集或业务依据。
 
 ## Python 实现
 
 ```python
-def rrf_fusion(ranked_lists: list[list[str]], k: int = 60) -> list[tuple[str, float]]:
-    """
-    ranked_lists: 各路检索返回的文档 ID 列表，按排名顺序
-    返回: (doc_id, rrf_score) 按分数降序
-    """
-    from collections import defaultdict
+from collections import defaultdict
+
+def rrf_fusion(ranked_lists, k=60):
     scores = defaultdict(float)
-
-    for lst in ranked_lists:
-        for rank, doc_id in enumerate(lst, start=1):
+    for ranked in ranked_lists:
+        seen = set()
+        for rank, doc_id in enumerate(ranked, start=1):
+            if doc_id in seen:       # 单个列表内只计第一次出现
+                continue
+            seen.add(doc_id)
             scores[doc_id] += 1.0 / (k + rank)
-
-    return sorted(scores.items(), key=lambda x: x[1], reverse=True)
-
-
-# ===== 使用示例 =====
-# 向量检索结果（按余弦相似度排序）
-dense_results = ["doc_B", "doc_A", "doc_C", "doc_E"]
-
-# BM25 关键词检索结果
-sparse_results = ["doc_A", "doc_D", "doc_B", "doc_F"]
-
-# RRF 融合
-fused = rrf_fusion([dense_results, sparse_results], k=60)
-for doc_id, score in fused:
-    print(f"{doc_id}: {score:.4f}")
-
-# 输出:
-# doc_A: 0.0323  ← 两路都排前
-# doc_B: 0.0323  ← 同上
-# doc_C: 0.0164  ← 只在 dense 里
-# doc_D: 0.0161  ← 只在 sparse 里
-# doc_E: 0.0159  ← 只在 dense 里
-# doc_F: 0.0156  ← 只在 sparse 里
+    return sorted(scores.items(), key=lambda item: (-item[1], item[0]))
 ```
 
----
+最后用 `doc_id` 打破同分只是确定性示例；生产系统可用原始排序、时间或其他业务规则处理 tie-break。
 
-## 在 RAG / 大模型中的应用
+## 关系网络
 
-| 场景 | 融合对象 |
-|------|---------|
-| **混合检索** | Dense embedding + BM25 稀疏检索 |
-| **多 query 变体** | 同一 query 的不同改写版本各自检索，RRF 合并 |
-| **多字段检索** | 问题字段 + 答案字段 + 标题字段分别检索 |
-| **多语言检索** | 中文 query + 英文翻译 query 分别检索 |
-| **跨模态检索** | 文本检索 + 图像检索（用统一 doc ID） |
+- 关联 [[词嵌入]] — 稠密检索常从嵌入相似度得到其中一路排名
+- 关联 [[内积]] — 向量检索常用内积或余弦相似度形成候选列表
+- 对比 [[帕累托(Pareto)]] — RRF 把多路排名直接标量化，而 Pareto 方法保留多目标非支配关系
 
-LlamaIndex、LangChain、Azure AI Search 均内置 RRF 作为默认融合策略。
+## 参考资料
 
----
-
-## 记忆要点
-
-| 要点 | 内容 |
-|------|------|
-| **核心思想** | 不看分数看排名，高排名 = 高贡献 |
-| **公式** | $\sum 1/(k + \text{rank}_i)$ |
-| **默认 k** | 60 |
-| **最大优势** | 免归一化，异构系统直接融合 |
-| **最大局限** | 丢弃原始分数信息 |
-| **出现场景** | RAG 混合检索、多路召回融合 |
-
----
-
-## 记忆口诀
-
-> **RRF 看排不看来——倒数一加就排队，k 等于六十默认配。**
-
----
-
-## 相关概念
-
-- [[BM25]] — 经典稀疏检索算法，RRF 最常融合的搭档之一
-- [[密集检索(Dense Retrieval)]] — 基于 embedding 的语义检索
-- [[RAG(检索增强生成)]] — RRF 在 RAG 系统中是混合检索标配
-- [[交叉编码器(Cross-encoder)]] — RRF 融合后常用 cross-encoder 做精排
-- [[排序学习(Learning to Rank)]] — 有标注数据时替代 RRF 的方案
-
----
+- [Reciprocal Rank Fusion Outperforms Condorcet and Individual Rank Learning Methods](https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf) — RRF 原始论文与 $k=60$ 实验设置

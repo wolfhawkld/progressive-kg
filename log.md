@@ -42,3 +42,24 @@
 - Level 2（5个子主题，一对多）：基本概念 / 经典方程 / 分类与特征 / 求解方法 / 与深度学习的关联
 - Level 3（每个子主题2-3个细节，一对多）：偏导数定义、波动/热传导/拉普拉斯方程、特征线理论、分离变量法、傅里叶变换、扩散模型/神经ODE/梯度流
 - 参考素材：vector-calculus-fields.md（人机知识，含 🌐 HTML 链接）
+- 链接到 [[梯度下降优化]] [[正交]] [[反向传播]] [[扩散模型]] [[标准化]]
+
+## [2026-07-16] audit | Schema 1.1 全库修复
+
+- 保留 `home.md` 网页式 Reading View 为主入口，Graph View 保持辅助角色
+- 分离导航层级与单页 L1/L2/L3 披露层级，迁移 47 个内容页和 19 个 MOC
+- 统一 frontmatter、L1 定义、关系网络、目录 scope、来源与生命周期字段
+- 重写 lint 为默认只读校验，补充迁移脚本和 8 个单元测试
+- 校正 KV Cache、FlashAttention、PDE、PCA、幂等性、残差、注意力及训练技能等关键事实边界
+- 修复无效 CSS 选择器，并同步 Home/MOC/Obsidian 配置说明
+- 最终校验：0 errors / 0 warnings / 0 info；迁移 dry-run 0 changes；`git diff --check` 通过
+- 复核记录：[[Meta/reviews/2026-07-16-schema-1.1-audit]]
+
+## [2026-07-17] integrate | 远端新增概念接入 Schema 1.1
+
+- 将远端“幂变换”“Softmax”“交叉熵”“Log-Sum-Exp”迁移到 Schema 1.1，并保留 Home/MOC 的 Dataview 自动入口
+- 把 2 个 `status: placeholder` 空节点补全为有定义、主干、关系和来源的 growing 页面，不再保留 TBD 空壳
+- 修正幂变换与 PCA、重复标准化、Yeo-Johnson 公式，以及 Softmax 数值稳定性和 CrossEntropyLoss 输入语义等边界
+- 在注意力机制、损失函数和标准化中补充反向关系，避免新增页面成为孤儿节点
+- lint 新增 TBD 占位定义与无实质 L2 空节点检查；旧 placeholder 迁移为 seed 后仍须补全才能通过
+- 校验结果：0 errors / 0 warnings / 0 info；12 个测试通过；迁移 dry-run 0 changes；`git diff --check` 通过

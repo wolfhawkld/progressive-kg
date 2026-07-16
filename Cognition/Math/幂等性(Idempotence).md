@@ -1,302 +1,139 @@
 ---
+schema_version: '1.1'
 title: 幂等性（Idempotence）
-summary: 操作的重复执行不改变结果：f(f(x))=f(x)。从投影矩阵到 REST API 设计均有体现
-level: concept
-category: Cognition/Math/逻辑与元数学
-tags: []
-related:
-- '[[标准化(Standardization)]]'
-- '[[梯度下降优化]]'
-- '[[均方误差]]'
-- '[[自指]]'
-- '[[正则化]]'
-created: 2026-05-23
-last_verified: 2026-07-08
-confidence: medium
-status: draft
+aliases:
+- Idempotence
+- 幂等性
+summary: 操作满足 f(f(x))=f(x)，即首次应用后再次应用不会继续改变结果
+type: concept
+maturity: evergreen
+confidence: high
+tags:
+- 数学性质
+- 分布式系统
+- HTTP
+created: '2026-05-23'
+updated: '2026-07-16'
+verified: '2026-07-16'
+review_due: '2027-07-16'
+sources:
+- https://www.rfc-editor.org/rfc/rfc9110.html#section-9.2.2
+- https://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm
 ---
+
 # 幂等性（Idempotence）
 
-> 操作的**重复执行不改变结果**：$f(f(x)) = f(x)$。从数学的投影矩阵到 REST API 设计再到分布式系统的可靠性保障——同一个数学性质，贯穿理论与实践。
-
----
-
-## 直觉理解
-
-**幂等性就是说：做一次和做一万次，效果一样。**
-
-- 电梯按同一个楼层按钮 10 次 → 还是去那一层（幂等）
-- 电梯按 10 个不同楼层 → 到不同层（非幂等）
-
-数学上，幂等操作的"输出"落在操作的"不动点"上——再做一次也不会变。
-
-在计算机系统里，幂等性是**分布式环境的"护身符"**：网络不可靠，请求会重试，消息会重复。幂等操作天然抗重放——再执行多少次也不怕。
-
----
+> 操作满足 f(f(x))=f(x)，即首次应用后再次应用不会继续改变结果。
 
 ## 核心定义
 
-### 数学定义
+若函数或操作 $f$ 对定义域内任意 $x$ 都满足：
 
-对于运算 $f$，如果：
+$$
+f(f(x))=f(x),
+$$
 
-$$f(f(x)) = f(x) \quad \text{对任意 } x \text{ 成立}$$
+则 $f$ 是幂等的。关键有两个：比较的是同一操作的复合，而不是“重复计算得到同一个值”；等式必须对全部输入成立，而不只是某个收敛点。
 
-则称 $f$ 是**幂等**的。任何元素的"结果"都在 $f$ 的不动点集中。
+### 直觉
 
-### 推广到 n 次
+- 绝对值：$|\,|x|\,|=|x|$
+- 集合去重：去重后的集合再去重不变
+- 投影：投到同一子空间后，再投一次仍在原位置
+- 赋固定值：把状态设为 `closed`，重复设置仍是 `closed`
 
-若 $f$ 幂等，则对任意 $n \geq 1$：
+如果 $f$ 幂等，则任意整数 $n\ge1$ 都有 $f^n(x)=f(x)$；所有输出也都是 $f$ 的不动点。
 
-$$f^n(x) = f(x)$$
+## 幂等与不动点
 
-即执行一次与执行任意多次结果相同。
+“算子有不动点”弱于“算子幂等”。梯度下降更新 $G$ 在最优点可能满足 $G(w^*)=w^*$，但一般仍有 $G(G(w))\ne G(w)$，所以 $G$ 不是幂等算子。
 
-### 代数意义
+| 例子 | 是否幂等 | 原因 |
+|---|---|---|
+| 投影矩阵 $P$ | 是 | 对所有向量都有 $P^2x=Px$ |
+| 梯度下降一步 | 通常否 | 远离不动点时第二步仍会更新 |
+| Bellman 算子 | 通常否 | $V^*$ 是不动点，不代表 $T(T(V))=T(V)$ |
+| 同一输入上重算 MSE | 不是该概念 | 这是确定性重算，不是把输出再次传给同一算子 |
+| 用固定 $\mu,\sigma$ 重复做 Z-score | 通常否 | 第二次应用 $(x-\mu)/\sigma$ 仍会改变值 |
+| L1/L2 正则化训练 | 通常否 | 再训练或再收缩通常继续改变参数 |
 
-在抽象代数中，**幂等元**（idempotent element）$e$ 满足 $e \cdot e = e$。在环中，投影就是幂等元的几何对应。
+## 线性代数中的幂等
 
----
+正交投影矩阵可写为：
 
-## 关键性质
+$$
+P=A(A^TA)^{-1}A^T
+$$
 
-| 性质 | 说明 |
-|------|------|
-| **不动点** | 若 $y = f(x)$，则 $f(y) = y$，即所有输出都是不动点 |
-| **吸收性** | 第一次执行后产生最终状态，后续执行"吸收"到这个状态 |
-| **组合保持** | 若 $f, g$ 幂等且可交换（$f \circ g = g \circ f$），则 $f \circ g$ 也幂等 |
-| **幂等矩阵** | 投影矩阵 $P$ 满足 $P^2 = P$（特征值只有 0 和 1） |
-| **不可逆** | 非平凡的幂等操作通常是"有损"的（投影丢失了维度） |
+当 $A$ 列满秩时有 $P^2=P$；一般情形可用 Moore–Penrose 伪逆。幂等矩阵的特征值只能是 0 或 1。[[主成分分析(PCA)]] 的“投影回选定主成分子空间”是幂等的，但降维坐标变换本身输入输出维度不同，不能不加区分地写成 $f(f(x))$。
 
----
+## HTTP 语义
 
-## 分类
+HTTP 所说的幂等，是多次发送相同请求时，服务器上“预期效果”与发送一次相同；响应状态码和日志等附带行为可以不同。
 
-### 按领域
+| 方法 | 规范语义是否幂等 | 说明 |
+|---|:---:|---|
+| GET / HEAD / OPTIONS | 是 | 还具有安全语义；实现仍可能记录日志等附带行为 |
+| PUT | 是 | 对同一目标反复提交同一表示，预期最终状态相同 |
+| DELETE | 是 | 重复删除可返回不同状态码，但目标仍处于不存在状态 |
+| POST | 否 | 方法语义不保证幂等；可额外用幂等键实现业务去重 |
+| PATCH | 不保证 | 补丁可能是“设值”也可能是“递增”，具体操作可自行设计为幂等 |
 
-| 领域 | 例子 | 说明 |
-|------|------|------|
-| **数学/代数** | 绝对值：$\vert \vert x \vert \vert = \vert x \vert$ | 同一操作重复不变 |
-| **集合论** | $A \cup A = A$，$A \cap A = A$ | 并集/交集天然幂等 |
-| **线性代数** | 投影矩阵 $P^2 = P$ | 再投影一次不变 |
-| **HTTP/REST** | GET、PUT、DELETE | POST 不是幂等 |
-| **分布式系统** | 幂等键（idempotency key） | 防止重复处理 |
-| **数据库** | UPDATE SET x=5 | 多次执行结果是行值=5 |
+“方法语义幂等”不等于一次请求可以随意重放：认证、并发更新、条件请求和外部副作用仍需单独处理。
 
-### HTTP 方法幂等性
+## 分布式系统中的实现
 
-| 方法 | 幂等 | 安全 | 说明 |
-|------|------|------|------|
-| **GET** | ✅ | ✅ | 只读，无副作用 |
-| **HEAD** | ✅ | ✅ | 同 GET，无 body |
-| **OPTIONS** | ✅ | ✅ | 查询能力 |
-| **PUT** | ✅ | ❌ | 全量替换，多次结果相同 |
-| **DELETE** | ✅ | ❌ | 第一次删除，后续 404 仍是删除态 |
-| **POST** | ❌ | ❌ | 通常创建新资源，每次产生新 ID |
-| **PATCH** | ❌ | ❌ | 部分更新，语义可能叠加 |
+网络超时会让客户端无法判断服务端是否已经执行，因此安全重试通常需要一个可持久化的业务身份，而不只是重复发送相同 JSON。
 
-> **注意**：DELETE 的幂等性有细微点——第一次返回 200，第二次返回 404，但**资源状态一致**（已删除），所以仍算幂等。
+### 幂等键
 
----
+典型流程为：
 
-## ML/DL 中的应用
+1. 客户端为一次业务操作生成稳定键。
+2. 服务端在事务内创建“键 → 处理状态/结果”记录。
+3. 相同键和相同请求再次到达时，返回已保存结果。
+4. 相同键却携带不同请求参数时拒绝处理。
 
-### 1. Dropout / DropPath
+并发请求、处理中的状态、失败重试和键的过期策略都必须定义；仅用进程内字典不足以提供生产级保证。
 
-在训练时随机丢弃神经元，但推理时不丢弃。这个随机操作本身**不幂等**（每次丢弃不同），但最终权重收敛到的解是训练过程反复应用后的不动点。
+### 数据库约束
 
-### 2. 投影层与 Embedding
+唯一索引可阻止重复插入，是实现幂等的重要构件，但它不会自动撤销已经发送的消息、扣款或其他外部副作用，也不会自动返回首次请求的完整结果。
 
-线性代数中，投影矩阵 $P = A(A^T A)^{-1} A^T$ 是幂等的。PCA、线性回归的帽子矩阵均满足 $P^2 = P$。
+```sql
+INSERT INTO orders (request_id, amount)
+VALUES ('req-123', 100)
+ON CONFLICT (request_id) DO NOTHING;
+```
 
-### 3. 梯度下降的不动点
+通常还需把业务写入、幂等记录和待发送事件放入同一事务，或配合 outbox/inbox 等模式。
 
-在收敛处 $\nabla L(w^*) = 0$，梯度更新 $w_{t+1} = w_t - \eta \nabla L(w_t)$ 变为幂等：$w^* = w^* - 0$。
-
-### 4. RL 中的 Bellman 最优算子
-
-Bellman optimality operator $T^*$ 满足：最优价值函数是它的不动点 $T^*(V^*) = V^*$。算子本身不一定幂等，但在不动点处是。
-
-### 5. 数据预处理
-
-对同一数据集反复应用标准化（用同一组 $\mu, \sigma$）是幂等的——因为 $x' = (x - \mu)/\sigma$，再标准化一次结果不变。
-
----
-
-## Python 实现
+## Python 验证
 
 ```python
 import numpy as np
 
-# ===== 数学幂等：绝对值 =====
-x = -5.3
-assert abs(abs(x)) == abs(x)  # | | x | | = |x|
+A = np.array([[1.0, 2.0],
+              [3.0, 4.0],
+              [5.0, 6.0]])
+P = A @ np.linalg.pinv(A)  # 到 A 列空间的正交投影
 
-# ===== 集合幂等 =====
-A = {1, 2, 3}
-assert A.union(A) == A
-assert A.intersection(A) == A
+assert np.allclose(P @ P, P)
 
-# ===== 投影矩阵幂等 =====
-# P = A(A^T A)^{-1} A^T
-A = np.array([[1, 2],
-              [3, 4],
-              [5, 6]])
-
-P = A @ np.linalg.inv(A.T @ A) @ A.T
-# 验证 P^2 = P
-print(f"P^2 ≈ P: {np.allclose(P @ P, P)}")
-# 验证特征值只有 0 和 1
-eigvals = np.linalg.eigvals(P)
-print(f"特征值: {np.round(eigvals.real, 6)}")
-
-
-# ===== 幂等 API 设计：幂等键模式 =====
-import hashlib
-import json
-
-class IdempotencyStore:
-    """幂等键存储，防止重复处理"""
-    
-    def __init__(self):
-        self._store = {}  # {key: status_or_result}
-    
-    def process(self, idempotency_key: str, operation):
-        """
-        使用幂等键处理请求：
-        - 首次：执行操作并缓存结果
-        - 重复：直接返回缓存结果
-        """
-        if idempotency_key in self._store:
-            print(f"🔄 重复请求 {idempotency_key[:8]}... → 返回缓存")
-            return self._store[idempotency_key]
-        
-        print(f"✅ 首次请求 {idempotency_key[:8]}... → 执行操作")
-        result = operation()
-        self._store[idempotency_key] = result
-        return result
-
-
-store = IdempotencyStore()
-
-# 模拟支付请求——幂等键 = 订单ID
-def process_payment(order_id):
-    # 生成幂等键
-    key = f"payment_{order_id}"
-    return store.process(key, lambda: {"status": "paid", "order": order_id})
-
-# 同一个订单重试多次
-r1 = process_payment("ORDER-12345")
-r2 = process_payment("ORDER-12345")  # 重复 → 返回缓存
-r3 = process_payment("ORDER-12345")  # 重复 → 返回缓存
-
-assert r1 == r2 == r3
-print(f"结果一致: {r1}")
-
-
-# ===== HTTP 幂等性验证 =====
-# 模拟 PUT（幂等）vs POST（非幂等）
-class ResourceStore:
-    def __init__(self):
-        self.data = {}
-        self._counter = 0
-    
-    def put(self, key, value):
-        """PUT 幂等——多次执行结果相同"""
-        self.data[key] = value
-        return {"key": key, "value": value}
-    
-    def post(self, value):
-        """POST 非幂等——每次产生新资源"""
-        self._counter += 1
-        key = f"item_{self._counter}"
-        self.data[key] = value
-        return {"key": key, "value": value}
-
-store = ResourceStore()
-
-# PUT 幂等
-assert store.put("name", "Alice") == store.put("name", "Alice")
-
-# POST 非幂等
-r1 = store.post("first")
-r2 = store.post("first")  # 不同 key！
-assert r1 != r2
-print(f"POST 1: {r1['key']}, POST 2: {r2['key']}")
+mu, sigma = 10.0, 2.0
+zscore = lambda x: (x - mu) / sigma
+assert not np.isclose(zscore(zscore(14.0)), zscore(14.0))
 ```
 
----
+## 关系网络
 
-## 分布式系统实现模式
-
-### 1. 幂等键（Idempotency Key）
-
-客户端生成唯一键，服务端以键去重：
-
-```
-Client → POST /payments  Header: Idempotency-Key: abc-123
-                       ↓
-Server → 检查 "abc-123" 是否已处理？
-           ├─ 是 → 返回缓存结果（缓存过期后清理）
-           └─ 否 → 执行业务逻辑，缓存结果，返回
-```
-
-### 2. 唯一约束
-
-数据库层天然幂等——唯一索引或主键冲突保证不会重复插入。
-
-```sql
-INSERT INTO orders (id, amount) VALUES ('ORDER-123', 100)
-ON CONFLICT (id) DO NOTHING;  -- 重复插入无副作用
-```
-
-### 3. 乐观锁
-
-用版本号判断是否已更新过：
-
-```sql
-UPDATE users SET balance = 100, version = version + 1
-WHERE id = 1 AND version = 5;
--- version 已变为 6，重复执行影响 0 行
-```
-
----
-
-## 记忆要点
-
-| 要点 | 内容 |
-|------|------|
-| **核心公式** | $f(f(x)) = f(x)$ — 重复操作不变 |
-| **直觉** | 做一次和做一万次，效果一样 |
-| **数学本源** | 投影是幂等的（$P^2 = P$），特征值只有 0 和 1 |
-| **HTTP 中** | GET/PUT/DELETE 幂等，POST/PATCH 非幂等 |
-| **分布式关键** | 网络重试不可避——幂等是抗重放的唯一保证 |
-| **实现方式** | 幂等键（去重存储）+ 唯一约束 + 乐观锁 |
-| **本质** | 不动点——第一次执行后，后续操作"吸收" |
-
----
-
-## 记忆口诀
-
-> **幂等者，一次定乾坤，重复不松手。f(f(x)) = f(x)，投影一去不回头。**
-
----
-
-## 相关概念
-
-- [[标准化(Standardization)]] — 用同一组参数反复标准化是幂等的
-- [[梯度下降优化]] — 收敛到不动点后更新变成幂等
-- [[均方误差]] — MSE 对同一组预测结果重复计算不变
-- [[自指]] — 自指系统的固定点是幂等的一个体现
-- [[正则化]] — L1/L2 对已正则化的模型反复应用（同参数）是幂等的
-
----
+- 关联 [[正交]] — 正交投影是最典型的幂等线性算子
+- 应用 [[主成分分析(PCA)]] — 重构到固定主成分子空间的投影满足 $P^2=P$
+- 对比 [[梯度下降优化]] — 收敛点是不动点，但单步更新算子通常不幂等
+- 对比 [[标准化]] — 固定参数的 Z-score 重复应用通常仍会改变数据
 
 ## 参考资料
 
-- Wikipedia: Idempotence
-- Fielding, R. T. (2000). *Architectural Styles and the Design of Network-based Software Architectures* (REST dissertation)
-- Kleppmann, M. (2017). *Designing Data-Intensive Applications*, Chapter 8
-- Richardson & Ruby (2007). *RESTful Web Services*
-
----
+- [RFC 9110 §9.2.2：Idempotent Methods](https://www.rfc-editor.org/rfc/rfc9110.html#section-9.2.2) — HTTP 幂等语义
+- [Fielding：Architectural Styles and the Design of Network-based Software Architectures](https://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm) — REST 架构背景
+- Kleppmann, *Designing Data-Intensive Applications*, Chapter 8 — 重试、故障与分布式语义

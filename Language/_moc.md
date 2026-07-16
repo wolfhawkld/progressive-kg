@@ -1,25 +1,30 @@
 ---
+schema_version: '1.1'
 title: 语言域概念地图
-level: moc
-category: Language
+type: moc
+scope: Language
 ---
 
 # 语言域概念地图
 
-## 概念索引
+## 子域导航
+
+- [[Language/academic-english/_moc|📚 学术英语]]
+
+## 全域概念
 
 ```dataview
-TABLE summary AS "定义", last_verified AS "验证日期", status AS "状态"
-FROM "Language"
-WHERE level = "concept"
+TABLE summary AS "定义", maturity AS "成熟度", updated AS "更新日期"
+FROM ""
+WHERE startswith(file.folder, this.scope) AND type != "moc"
 SORT title ASC
 ```
 
 ## 待审阅
 
 ```dataview
-TABLE summary AS "定义", last_verified AS "验证日期"
-FROM "Language"
-WHERE level = "concept" AND (status = "stale" OR status = "draft" OR confidence = "low")
-SORT last_verified ASC
+TABLE summary AS "定义", maturity AS "成熟度", review_due AS "复核日期"
+FROM ""
+WHERE startswith(file.folder, this.scope) AND type != "moc" AND (maturity != "evergreen" OR confidence = "low" OR !verified OR !sources OR (review_due AND review_due <= date(today)))
+SORT review_due ASC
 ```

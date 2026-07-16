@@ -1,3 +1,7 @@
+---
+cssclasses: [kg-home]
+---
+
 # 🏠 Progressive-KG
 
 > 渐进式知识图谱——分层级、可下钻、双链网络的外脑知识系统。
@@ -13,20 +17,20 @@
 ## 最近更新
 
 ```dataview
-TABLE summary AS "定义", last_verified AS "验证日期", category AS "域"
+TABLE summary AS "定义", updated AS "更新日期", file.folder AS "域"
 FROM ""
-WHERE level = "concept"
-SORT last_verified DESC
+WHERE contains(["concept", "procedure", "hypothesis", "question", "experiment", "review"], type)
+SORT updated DESC
 LIMIT 10
 ```
 
 ## 待审阅
 
 ```dataview
-TABLE summary AS "定义", last_verified AS "验证日期"
+TABLE summary AS "定义", maturity AS "成熟度", confidence AS "置信度", review_due AS "复核日期"
 FROM ""
-WHERE level = "concept" AND (status = "stale" OR status = "draft" OR confidence = "low")
-SORT last_verified ASC
+WHERE contains(["concept", "procedure", "hypothesis", "question", "experiment", "review"], type) AND (maturity != "evergreen" OR confidence = "low" OR !verified OR !sources OR (review_due AND review_due <= date(today)))
+SORT review_due ASC
 LIMIT 10
 ```
 
@@ -38,3 +42,5 @@ LIMIT 10
 - 变更日志：[[log]]
 - 概念模板：[[_system/templates/concept]]
 - MOC 模板：[[_system/templates/moc]]
+- 复核模板：[[_system/templates/review]]
+- Obsidian 配置：[[_system/obsidian-setup-guide]]
