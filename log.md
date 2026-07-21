@@ -20,6 +20,13 @@
 - raw 源文件：standardization-ml-dl-rl.md + standardization-2nd-brain.md
 - 链接到 [[正交]]（正交初始化与标准化互补关系）
 
+## [2026-07-26] integrate | 交叉熵与信息论关联概念
+
+- 合并交叉熵的并行升级，保留 Schema 1.1 结构并补充直观示例、极大似然、损失对比、深度学习应用和 perplexity 边界
+- 新建 [[信息熵]] 与 [[KL散度]] seed 页面，补齐定义、核心性质、适用边界和关系网络
+- 细化 MSE 梯度饱和与 perplexity 的适用条件，避免绝对化解释
+- 链接到 [[Softmax]]、[[Log-Sum-Exp]]、[[损失函数]]、[[反向传播]] 和 [[知识蒸馏]]
+
 ## [2026-07-13] ingest | Softmax
 
 - 新建概念：Softmax（指数归一化概率函数）
