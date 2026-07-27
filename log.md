@@ -70,3 +70,10 @@
 - 在注意力机制、损失函数和标准化中补充反向关系，避免新增页面成为孤儿节点
 - lint 新增 TBD 占位定义与无实质 L2 空节点检查；旧 placeholder 迁移为 seed 后仍须补全才能通过
 - 校验结果：0 errors / 0 warnings / 0 info；12 个测试通过；迁移 dry-run 0 changes；`git diff --check` 通过
+
+## [2026-07-27] ingest | Adam与AdamW优化器
+
+- 创建 Adam与AdamW优化器概念笔记（seed）
+- 覆盖 Adam 算法（偏差校正、几何直觉）和 AdamW（解耦权重衰减）
+- 关联：梯度下降优化、动量、Muon优化器、正交
+- lint: 0 error / 1 warning（新页面无入链，正常）
