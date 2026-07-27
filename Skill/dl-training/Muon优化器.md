@@ -84,3 +84,5 @@ W_t = W_{t-1} - η · scale · O_t
 ## 参考资料
 
 - [Muon: An optimizer for hidden layers in neural networks](https://kellerjordan.github.io/posts/muon/) — 作者定义、参数范围、NewtonSchulz5 与实验边界
+
+- [[raw/human_ai_knowledge/deep-learning-metaphors.md]] | [🌐 HTML](https://wolfhawkld.github.io/human_ai_knowledge/deep-learning-metaphors.html) - 优化器作为匠人的类比

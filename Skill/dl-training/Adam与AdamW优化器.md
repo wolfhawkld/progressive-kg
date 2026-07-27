@@ -109,3 +109,5 @@ v̂_t = v_t / (1 - β₂^t)
 
 - [Adam: A Method for Stochastic Optimization](https://arxiv.org/abs/1412.6980) — 原始论文，Kingma & Ba, ICLR 2015
 - [Decoupled Weight Decay Regularization](https://arxiv.org/abs/1711.05101) — AdamW 论文，Loshchilov & Hutter, 2017
+
+- [[raw/human_ai_knowledge/deep-learning-metaphors.md]] | [🌐 HTML](https://wolfhawkld.github.io/human_ai_knowledge/deep-learning-metaphors.html) - Adam 作为灵活变通年轻匠人的类比

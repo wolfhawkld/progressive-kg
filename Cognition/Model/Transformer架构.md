@@ -150,3 +150,5 @@ PE(pos, 2i+1) = cos(pos / 10000^(2i/d))
 ## 参考资料
 
 - [Attention Is All You Need](https://arxiv.org/abs/1706.03762) — 原始 Encoder–Decoder Transformer、复杂度与并行性讨论
+
+- [[raw/human_ai_knowledge/deep-learning-metaphors.md]] | [🌐 HTML](https://wolfhawkld.github.io/human_ai_knowledge/deep-learning-metaphors.html) - Transformer 作为全局统筹者的类比

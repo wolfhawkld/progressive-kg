@@ -77,3 +77,11 @@
 - 覆盖 Adam 算法（偏差校正、几何直觉）和 AdamW（解耦权重衰减）
 - 关联：梯度下降优化、动量、Muon优化器、正交
 - lint: 0 error / 1 warning（新页面无入链，正常）
+
+## [2026-07-27] link | deep-learning-metaphors -> [21个LLM概念]
+
+- 复制 deep-learning-metaphors.md 到 raw/human_ai_knowledge/
+- 给 21 个 LLM 相关概念笔记追加人机知识参考资料引用
+- 涉及：Transformer架构、注意力机制、残差连接、位置编码、激活函数、损失函数、归一化层、反向传播、卷积神经网络、循环神经网络、梯度消失与梯度爆炸、正则化、梯度下降优化、动量、Adam与AdamW优化器、Muon优化器、学习率调度、数据增强、知识蒸馏、模型量化、参数高效微调
+- 修复正交.md：补齐参考资料节缺失的 standardization-ml-dl-rl 人机知识链接
+- lint: 0 error / 0 warning（AGENTS.md 无 frontmatter 除外）
