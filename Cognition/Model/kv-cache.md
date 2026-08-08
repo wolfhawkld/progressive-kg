@@ -13,7 +13,7 @@ tags:
 - LLM推理
 - 缓存
 created: '2026-07-08'
-updated: '2026-07-16'
+updated: '2026-08-08'
 verified: '2026-07-16'
 review_due: '2026-10-16'
 sources:
@@ -122,6 +122,7 @@ PagedAttention 论文在其测试模型和工作负载中报告了接近零的 K
 - 前置 [[注意力机制]] — 缓存的是注意力层已经计算出的 K/V
 - 应用 [[Transformer架构]] — 主要用于自回归 Transformer 的增量解码
 - 对比 [[flash-attention]] — 分别优化跨步重复计算与单次注意力的内存 IO
+- 相关 [[GPU]] — KV cache 的容量与内存带宽是 GPU 推理吞吐的常见瓶颈
 
 ## 参考资料
 

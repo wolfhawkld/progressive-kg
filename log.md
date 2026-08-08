@@ -104,3 +104,15 @@
 - 来源：ThunderCompute 架构指南 + Brenndoerfer 内存层级 + Medium SIMT + Eureka CUDA Cores
 - 将 TPU.md 中「待建：GPU」改为真实双链，建立 GPU↔TPU 双向对比
 - lint：无 error（AGENTS.md 缺 frontmatter 为既有问题）
+
+## [2026-08-08] ingest | CPU + maintain | 硬件三角补全
+
+- 新增概念页 `Skill/dl-training/CPU.md`（maturity: growing, confidence: high）
+- CPU 与 GPU/TPU 建立双向对比，构成 CPU-GPU-TPU 加速器三角
+- Maintain 补全 4 条双向缺失关联（用户确认全部追加）：
+  - GPU ↔ kv-cache（KV cache 带宽是 GPU 推理瓶颈）
+  - GPU ↔ 训练调试（OOM/kernel/CUDA 错误调试）
+  - TPU ↔ 注意力机制（脉动阵列加速注意力矩阵乘）
+  - CPU ↔ 数据增强（数据预处理/增强常在 CPU 侧）
+- 同步更新 4 个目标页 updated：kv-cache、训练调试、注意力机制、数据增强
+- lint：无新增 error/warning（AGENTS.md 缺 frontmatter 为既有问题）
