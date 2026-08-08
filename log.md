@@ -94,3 +94,13 @@
 - 关系：对比 混合精度训练；应用 分布式训练、模型量化；相关 MoE架构、Transformer架构；待建 GPU
 - 来源：Google Cloud 官方 TPU 架构文档 + Emergent Mind 综述
 - lint：页面无 error；AGENTS.md 缺 frontmatter 为既有问题
+
+## [2026-08-08] ingest | GPU
+
+- 新增概念页 `Skill/dl-training/GPU.md`（maturity: growing, confidence: high）
+- L1：数千并行核心的通用并行处理器，高吞吐并行执行海量数学运算，深度学习主流加速器
+- L2 子主题：并行执行模型（SIMT 与线程层级）、内存层级与带宽瓶颈、深度学习中的角色与局限
+- 关系：对比 TPU；应用 分布式训练、混合精度训练、模型量化；相关 flash-attention、卷积神经网络
+- 来源：ThunderCompute 架构指南 + Brenndoerfer 内存层级 + Medium SIMT + Eureka CUDA Cores
+- 将 TPU.md 中「待建：GPU」改为真实双链，建立 GPU↔TPU 双向对比
+- lint：无 error（AGENTS.md 缺 frontmatter 为既有问题）
