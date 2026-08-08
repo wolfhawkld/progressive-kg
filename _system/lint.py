@@ -460,7 +460,7 @@ def lint(vault: Path) -> list[dict[str, str]]:
         rel = path.relative_to(vault)
         if rel.parts and rel.parts[0] == "raw":
             continue
-        if rel.as_posix() in {"SCHEMA.md", "home.md", "log.md"}:
+        if rel.as_posix() in {"SCHEMA.md", "home.md", "log.md", "AGENTS.md"}:
             continue
 
         content = path.read_text(encoding="utf-8")

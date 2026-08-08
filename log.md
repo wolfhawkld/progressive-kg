@@ -116,3 +116,9 @@
   - CPU ↔ 数据增强（数据预处理/增强常在 CPU 侧）
 - 同步更新 4 个目标页 updated：kv-cache、训练调试、注意力机制、数据增强
 - lint：无新增 error/warning（AGENTS.md 缺 frontmatter 为既有问题）
+
+## [2026-08-08] fix | lint AGENTS.md frontmatter 豁免
+
+- lint.py 遗漏了 AGENTS.md：根级 agent 规范文件应与 SCHEMA.md/home.md/log.md 同列豁免
+- 修复：lint.py 第 463 行豁免集合加入 "AGENTS.md"
+- 验证：lint 归零（0 error/0 warning），test_lint.py 12 项全过
