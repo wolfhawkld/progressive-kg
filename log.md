@@ -85,3 +85,12 @@
 - 涉及：Transformer架构、注意力机制、残差连接、位置编码、激活函数、损失函数、归一化层、反向传播、卷积神经网络、循环神经网络、梯度消失与梯度爆炸、正则化、梯度下降优化、动量、Adam与AdamW优化器、Muon优化器、学习率调度、数据增强、知识蒸馏、模型量化、参数高效微调
 - 修复正交.md：补齐参考资料节缺失的 standardization-ml-dl-rl 人机知识链接
 - lint: 0 error / 0 warning（AGENTS.md 无 frontmatter 除外）
+
+## [2026-08-08] ingest | TPU
+
+- 新增概念页 `Skill/dl-training/TPU.md`（maturity: growing, confidence: high）
+- L1：Google 为深度学习设计的专用 ASIC，用脉动阵列专攻矩阵乘加
+- L2 子主题：核心架构（脉动阵列与 MXU）、演进（v1→TPU7x 与训练/推理分工）
+- 关系：对比 混合精度训练；应用 分布式训练、模型量化；相关 MoE架构、Transformer架构；待建 GPU
+- 来源：Google Cloud 官方 TPU 架构文档 + Emergent Mind 综述
+- lint：页面无 error；AGENTS.md 缺 frontmatter 为既有问题
