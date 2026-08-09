@@ -122,3 +122,16 @@
 - lint.py 遗漏了 AGENTS.md：根级 agent 规范文件应与 SCHEMA.md/home.md/log.md 同列豁免
 - 修复：lint.py 第 463 行豁免集合加入 "AGENTS.md"
 - 验证：lint 归零（0 error/0 warning），test_lint.py 12 项全过
+
+## [2026-08-09] upgrade | 3 seed 升级 growing + 3 候选概念 seed 化
+
+- 升级 seed → growing（补 verified/review_due）：
+  - 信息熵（review_due 2027-08-08）
+  - KL散度（review_due 2027-08-08）
+  - Adam与AdamW优化器（review_due 2026-11-08，技术类90天）
+- 新建 seed 概念页（替换源节点「待建」标记为真实双链）：
+  - 偏差-方差分解（均方误差的统计意义）
+  - 过拟合（均方误差异常值敏感性）
+  - 特征工程（标准化的上位概念）
+- 均方误差、标准化 updated 更新为 2026-08-08
+- lint：0 error / 0 warning / 0 info

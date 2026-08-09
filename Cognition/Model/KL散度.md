@@ -6,15 +6,15 @@ aliases:
 - Relative Entropy
 summary: KL 散度衡量用分布 q 近似目标分布 p 时增加的期望对数编码代价，具有方向性且通常不对称
 type: concept
-maturity: seed
+maturity: growing
 confidence: medium
 tags:
 - 信息论
 - 概率分布
 created: '2026-07-21'
-updated: '2026-07-26'
-verified:
-review_due:
+updated: '2026-08-08'
+verified: '2026-08-08'
+review_due: '2027-08-08'
 sources:
 - https://doi.org/10.1214/aoms/1177729694
 ---

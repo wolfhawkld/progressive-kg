@@ -8,15 +8,15 @@ aliases:
 - Adam with Decoupled Weight Decay
 summary: 用梯度的一阶矩和二阶矩的指数滑动平均自适应调整每个参数的学习率，AdamW将权重衰减从梯度更新中解耦
 type: concept
-maturity: seed
+maturity: growing
 confidence: medium
 tags:
 - 优化器
 - 自适应学习率
 created: '2026-07-27'
-updated: '2026-07-27'
-verified:
-review_due:
+updated: '2026-08-08'
+verified: '2026-08-08'
+review_due: '2026-11-08'
 sources:
 - https://arxiv.org/abs/1412.6980
 - https://arxiv.org/abs/1711.05101
