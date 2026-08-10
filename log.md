@@ -165,3 +165,12 @@
 - 递进互链：向量→矩阵→张量（前置/组成/扩展），并关联 内积/外积/正交/奇异值/PCA/词嵌入
 - 日期以系统时间 2026-08-11 为准（review_due 按年 2027-08-11）
 - lint：0 error / 0 warning / 0 info
+
+## [2026-08-11] link | add-norm-vs-hc-mhc 人机知识 -> [超连接, 残差连接, 归一化层, 梯度消失与梯度爆炸]
+
+- 新增概念页 `Cognition/Model/超连接(Hyper-Connections).md`（growing, confidence high）：
+  - HC（ByteDance 2025）多流残差 + mHC（DeepSeek）双随机矩阵约束（Sinkhorn-Knopp）
+  - 与 LayerNorm 的幅度 vs 结构控制对比
+- 补充双向关联：残差连接（扩展）、归一化层（对比）、梯度消失与梯度爆炸（缓解）
+- raw/ 复制 human_ai_knowledge 的 add-norm-vs-hc-mhc 文档，raw 链接可解析
+- lint：0 error / 0 warning / 0 info
