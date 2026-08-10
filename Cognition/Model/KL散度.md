@@ -12,9 +12,9 @@ tags:
 - 信息论
 - 概率分布
 created: '2026-07-21'
-updated: '2026-08-08'
-verified: '2026-08-08'
-review_due: '2027-08-08'
+updated: 2026-08-10
+verified: 2026-08-10
+review_due: '2027-08-10'
 sources:
 - https://doi.org/10.1214/aoms/1177729694
 ---

@@ -14,8 +14,8 @@ tags:
 - 优化器
 - 自适应学习率
 created: '2026-07-27'
-updated: '2026-08-08'
-verified: '2026-08-08'
+updated: 2026-08-10
+verified: 2026-08-10
 review_due: '2026-11-08'
 sources:
 - https://arxiv.org/abs/1412.6980

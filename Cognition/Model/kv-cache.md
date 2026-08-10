@@ -13,7 +13,7 @@ tags:
 - LLM推理
 - 缓存
 created: '2026-07-08'
-updated: '2026-08-08'
+updated: 2026-08-10
 verified: '2026-07-16'
 review_due: '2026-10-16'
 sources:

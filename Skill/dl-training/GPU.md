@@ -7,9 +7,9 @@ type: concept
 maturity: growing
 confidence: high
 tags: [硬件, 深度学习, 加速器, 并行计算]
-created: 2026-08-08
-updated: 2026-08-08
-verified: 2026-08-08
+created: 2026-08-10
+updated: 2026-08-10
+verified: 2026-08-10
 review_due: 2026-11-08
 sources:
   - https://www.thundercompute.com/blog/nvidia-gpu-architecture-explained

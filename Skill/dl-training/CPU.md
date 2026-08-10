@@ -7,9 +7,9 @@ type: concept
 maturity: growing
 confidence: high
 tags: [硬件, 计算机体系结构, 并行计算]
-created: 2026-08-08
-updated: 2026-08-08
-verified: 2026-08-08
+created: 2026-08-10
+updated: 2026-08-10
+verified: 2026-08-10
 review_due: 2026-11-08
 sources:
   - https://en.wikipedia.org/wiki/Von_Neumann_architecture
