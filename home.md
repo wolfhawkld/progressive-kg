@@ -11,6 +11,7 @@ cssclasses: [kg-home]
 - [[Cognition/_moc|🧠 认知]] — 数学、模型、工作、生活
 - [[Skill/_moc|⚡ 技能]] — 编程、写作、管理
 - [[Language/_moc|📝 语言]] — 学术英语
+- [[Culture/_moc|🏛️ 人文与文明]] — 历史考古、思想信仰
 - [[Meta/_moc|🔮 元认知]] — 方法论、复盘
 - [[Horizon/_moc|🔭 探索]] — 待探索问题、实验记录
 

@@ -135,3 +135,15 @@
   - 特征工程（标准化的上位概念）
 - 均方误差、标准化 updated 更新为 2026-08-08
 - lint：0 error / 0 warning / 0 info
+
+## [2026-08-10] ingest | 新增 Culture 域 + 三星堆/僰人/羽化
+
+- 新增顶层域 Culture/（人文与文明），下设 history-archaeology（历史考古）与 thought（思想信仰）
+- 新增 3 个概念页（均 growing, confidence high）：
+  - Culture/history-archaeology/三星堆遗址.md — 长江上游青铜时代遗址、古蜀文明、祭祀器物
+  - Culture/history-archaeology/古蜀僰人文化.md — 川南僰人悬棺葬、族属之谜
+  - Culture/thought/羽化.md — 道教羽化登仙、词义三解、尸解
+- 新建 3 个 MOC（Culture 顶层 + 两个子域），home.md 加入 Culture 域导航
+- 三角互链：三星堆↔僰人↔羽化 双向关联（中华生死观/精神文化脉络）
+- 待建候选：金沙遗址、僚人、悬棺葬、道教、尸解、神仙信仰
+- lint：0 error / 0 warning / 0 info
