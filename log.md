@@ -174,3 +174,12 @@
 - 补充双向关联：残差连接（扩展）、归一化层（对比）、梯度消失与梯度爆炸（缓解）
 - raw/ 复制 human_ai_knowledge 的 add-norm-vs-hc-mhc 文档，raw 链接可解析
 - lint：0 error / 0 warning / 0 info
+
+## [2026-08-14] ingest | 贝叶斯网络
+
+- 新增概念页 `Cognition/Model/贝叶斯网络.md`（growing, confidence high）
+- L1：用 DAG 表达随机变量条件依赖的概率图模型，联合分布分解为各节点条件概率之积
+- L2 子主题：核心定义与因子分解、条件独立性、概率推理、学习与变体（朴素贝叶斯）
+- 关系：前置 KL散度、信息熵；相关 交叉熵；待建 贝叶斯定理/马尔可夫网络/马尔可夫链/因果推断
+- 日期按系统时间 2026-08-14，review_due 按年 2027-08-14
+- lint：0 error；no inbound 为新节点正常现象
