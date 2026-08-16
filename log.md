@@ -220,3 +220,12 @@
   - 正交：应用 傅里叶变换（复指数构成正交基）
 - 同步更新 3 页 updated → 2026-08-16
 - lint：0 error / 0 warning / 0 info（傅里叶 no-inbound 消除）
+
+## [2026-08-16] ingest | 泰勒展开
+
+- 新增概念页 `Cognition/Math/泰勒展开.md`（growing, confidence high）
+- L1：用函数在某点的各阶导数构造幂级数，在展开点附近用多项式逼近光滑函数
+- L2 子主题：核心定义（公式/Maclaurin/余项/常用展开）、与幂级数的关系、关键性质
+- 关系：相关 傅里叶变换；前置 内积；应用 偏微分方程；待建 幂级数/收敛半径
+- 日期按系统时间 2026-08-16，review_due 按年 2027-08-16
+- lint：0 error；no inbound 为新节点正常现象
