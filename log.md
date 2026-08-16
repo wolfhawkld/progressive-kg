@@ -309,3 +309,10 @@
 - 修复变分推断.md L2 缺引导段
 - 概率族待建清零；剩余微积分族待建 15 处
 - lint: 0 error / 0 warning / 0 info
+
+## [2026-08-17] ingest | 池化概念实体化
+
+- 创建 池化.md（Cognition/Math, seed）
+- 卷积.md 待建 -> 真实双链；卷积神经网络.md 补池化回链
+- 修复池化.md L2 缺引导段
+- lint: 0 error / 0 warning / 0 info
