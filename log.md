@@ -272,3 +272,16 @@
 - 修复：幂级数 definition 与 summary 一致化、莱布尼茨 broken wikilink、信号处理 L2 lead
 - 日期按系统时间 2026-08-17，review_due 按年 2027-08-17
 - lint：0 error / 0 warning / 0 info
+
+## [2026-08-17] ingest | 贝叶斯/马尔可夫待建候选实体化（5 个概念）
+
+- 新增 5 个概念页（均 growing, confidence high）：
+  - Cognition/Model/贝叶斯推断.md（贝叶斯定理的方法论延伸）
+  - Cognition/Model/因果推断.md（相关 vs 因果、do-演算、反事实）
+  - Cognition/Math/马尔可夫性质.md（无记忆性，马尔可夫链定义性假设）
+  - Cognition/Model/马尔可夫网络.md（无向图模型，与贝叶斯网络相对）
+  - Cognition/Model/马尔可夫链蒙特卡洛（MCMC）.md（采样后验的算法族）
+- 把源页待建替换为真实双链：贝叶斯网络（马尔可夫网络/因果推断）、贝叶斯定理（贝叶斯推断）、马尔可夫链（马尔可夫性质/MCMC）
+- 修复：因果推断 L2 lead
+- 日期按系统时间 2026-08-17，review_due 按年 2027-08-17
+- lint：0 error / 0 warning / 0 info
