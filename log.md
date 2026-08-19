@@ -325,3 +325,11 @@
 - 13 个源文件「待建」改为真实双链：中值定理、乘积法则、傅里叶变换、商法则、幂级数、拉普拉斯变换、收敛半径、洛必达法则、积分变换、莱布尼茨公式、链式法则、雅可比矩阵、频谱
 - 全库「待建」清零
 - lint: 0 error / 0 warning / 0 info
+
+## [2026-08-19] ingest | 退火算法
+
+- 创建 退火算法.md（Cognition/Model, seed）
+- 覆盖：核心思想（金属退火类比）、算法骨架（Metropolis 准则）、降温计划、与 MH/贪心/遗传算法的关系、应用
+- 关联：Metropolis-Hastings（接受准则同源）、梯度下降优化（对比）、超参数调优（应用）、MCMC
+- 回链：Metropolis-Hastings、超参数调优 补反向链接
+- lint: 0 error / 0 warning / 0 info
