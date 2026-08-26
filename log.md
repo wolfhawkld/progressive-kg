@@ -333,3 +333,9 @@
 - 关联：Metropolis-Hastings（接受准则同源）、梯度下降优化（对比）、超参数调优（应用）、MCMC
 - 回链：Metropolis-Hastings、超参数调优 补反向链接
 - lint: 0 error / 0 warning / 0 info
+
+## [2026-08-19] update | 奇异值.md 补充"奇异值分布的实际意义"
+
+- 新增一节：条件数与稳定性、有效维度与低秩近似、主导方向与谱分析、可逆性与正则化、秩亏与冗余探测
+- 关联现实应用：Hessian 条件数、LoRA 低秩、谱归一化、Tikhonov 正则化、Muon 压平奇异值尺度
+- lint: 0 error / 0 warning / 0 info
