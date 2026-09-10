@@ -367,3 +367,12 @@
 - 对比损失例子复算：logits (4,1,-0.5) 的正例概率为 0.942599，损失为 0.059114；未运行 CLIP 模型或训练实验。
 - MOC 按目录自动收录；raw/ 未修改。
 - 验证：新节点关系双向检查通过；全库 lint 为 0 error / 0 warning / 0 info，git diff --check 通过。
+
+## [2026-09-11] ingest | 几丁质、碱基对、氨基酸、DNA
+
+- 按文件名、title、aliases 查重，四个概念均无既有节点；新建 Cognition/Biology 子域及目录 MOC，并接入 Cognition 导航。
+- 新建 [[几丁质]]、[[碱基对]]、[[氨基酸]]、[[DNA]]，均保留 seed；verified 为 2026-09-11，review_due 为 2027-09-11。
+- 正文补充分子组成与连接方式、互补链方向、bp 与核苷酸数量、密码子到氨基酸的例子；区分几丁质与壳聚糖、核苷酸与氨基酸、碱基对与密码子。
+- 来源核验涵盖 NHGRI、OpenStax、NCBI Bookshelf 及几丁质材料研究；各页记录引用与支持范围。
+- 新节点关系双向维护；DNA 互补链和碱基对计数例子已复核。raw/ 未修改。
+- 验证：全库 lint 为 0 error / 0 warning / 0 info，git diff --check 通过。

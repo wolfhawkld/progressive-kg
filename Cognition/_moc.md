@@ -11,6 +11,7 @@ scope: Cognition
 
 - [[Cognition/Math/_moc|📐 数学]]
 - [[Cognition/Model/_moc|🤖 模型]]
+- [[Cognition/Biology/_moc|🧬 生物学]]
 - [[Cognition/work/_moc|💼 工作]]
 - [[Cognition/life/_moc|🌱 生活]]
 
