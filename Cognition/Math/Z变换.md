@@ -14,11 +14,12 @@ tags:
 - 积分变换
 - 离散系统
 created: '2026-08-16'
-updated: '2026-08-16'
+updated: '2026-09-11'
 verified: '2026-08-16'
 review_due: '2027-08-16'
 sources:
 - https://zh.wikipedia.org/zh-hans/Z%E8%BD%AC%E6%8D%A2
+- https://ocw.mit.edu/courses/res-6-007-signals-and-systems-spring-2011/resources/lecture-22-the-z-transform/
 ---
 
 # Z变换（Z-Transform）
@@ -47,7 +48,7 @@ $$X(z) = \sum_{n=-\infty}^{\infty} x[n]\, z^{-n}$$
 
 ## 关键性质
 
-- **差分变乘法**：$x[n-k] \leftrightarrow z^{-k} X(z)$，把差分方程变代数方程
+- **移位与差分**：对双边 Z 变换，$x[n-k] \leftrightarrow z^{-k}X(z)$，并需相应调整收敛域；用变换把差分方程化为代数方程时，单边 Z 变换或零初始条件会决定边界项，不能无条件省略
 - **卷积定理**：时域卷积 $\leftrightarrow$ z 域相乘（和拉普拉斯/傅里叶一致）
 - **应用**：数字滤波器设计、离散系统稳定性分析（极点/零点）、差分方程求解
 
@@ -60,3 +61,8 @@ $$X(z) = \sum_{n=-\infty}^{\infty} x[n]\, z^{-n}$$
 ## 参考资料
 
 - [Z 变换 - 维基百科](https://zh.wikipedia.org/zh-hans/Z%E8%BD%AC%E6%8D%A2) — 定义、收敛域、性质、与拉普拉斯的关系
+- [MIT OpenCourseWare：Lecture 22, The z-Transform](https://ocw.mit.edu/courses/res-6-007-signals-and-systems-spring-2011/resources/lecture-22-the-z-transform/) — ROC、逆变换与离散时间系统分析
+
+## 变更记录
+
+- 2026-09-11：补充 Z 变换移位的收敛域及差分方程初始条件边界；保留原 verified，本次为定向审阅。

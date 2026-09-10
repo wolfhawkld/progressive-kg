@@ -6,7 +6,7 @@ aliases:
 - HC
 - mHC
 - Manifold-Constrained Hyper-Connections
-summary: 把单一残差流扩展为多个并行流并用可学习映射混合的连接机制，mHC 用双随机矩阵约束保证其稳定
+summary: 把单一残差流扩展为多个并行流并用可学习映射混合，mHC 用双随机矩阵约束改善残差映射稳定性
 type: concept
 maturity: growing
 confidence: high
@@ -15,7 +15,7 @@ tags:
 - 残差连接
 - 梯度
 created: '2026-08-11'
-updated: '2026-08-11'
+updated: '2026-09-11'
 verified: '2026-08-11'
 review_due: '2027-08-11'
 sources:
@@ -25,9 +25,9 @@ sources:
 
 # 超连接（Hyper-Connections）
 
-> 把单一残差流扩展为多个并行流并用可学习映射混合的连接机制，mHC 用双随机矩阵约束保证其稳定。
+> 把单一残差流扩展为多个并行流并用可学习映射混合，mHC 用双随机矩阵约束改善残差映射稳定性。
 
-超连接（Hyper-Connections, HC）由 ByteDance 于 2025 年提出，是残差连接（Residual Connection）的推广：把单一残差向量扩展为 n 个并行流（典型 n=4），每层用可学习的 Res-Mapping / Pre-Mapping / Post-Mapping 混合这些流。DeepSeek 的 mHC（Manifold-Constrained Hyper-Connections）在此之上施加双随机矩阵约束，恢复稳定性。
+超连接（Hyper-Connections, HC）由 ByteDance 团队于 2024 年首次提交论文、并在 2025 年修订，是残差连接（Residual Connection）的推广：把单一残差向量扩展为 n 个并行流（典型 n=4），每层用可学习的 Res-Mapping / Pre-Mapping / Post-Mapping 混合这些流。DeepSeek 的 mHC（Manifold-Constrained Hyper-Connections）在此之上对残差混合映射施加双随机矩阵约束，旨在改善均值/范数传播的稳定性；完整网络的训练稳定性仍取决于其他映射、有限 Sinkhorn 迭代和训练设置。
 
 ## 为什么需要它：残差连接的瓶颈
 
@@ -64,7 +64,7 @@ HC 的无约束混合矩阵在深层模型上会破坏稳定性：
 
 ### mHC：双随机矩阵约束
 
-mHC 保留 HC 全部表达能力，同时恢复恒等保证。做法是把残差混合矩阵约束到**双随机矩阵流形**（Birkhoff polytope），用 **Sinkhorn-Knopp** 算法硬投影：
+mHC 保留多流混合能力，同时把残差混合矩阵约束到**双随机矩阵流形**（Birkhoff polytope），用 **Sinkhorn-Knopp** 算法近似投影：
 
 | 约束 | 含义 |
 |------|------|
@@ -74,11 +74,11 @@ mHC 保留 HC 全部表达能力，同时恢复恒等保证。做法是把残差
 
 由此获得关键性质：
 
-- **谱范数 ≤ 1**：非扩张映射，信号/梯度不爆炸
-- **组合封闭**：双随机矩阵相乘仍双随机，多层相乘仍稳定
-- **全局恒等**：全局保留 identity-like 残差，同时信息自由混合
+- **谱范数 ≤ 1**：对理想双随机矩阵，该矩阵本身是非扩张的；这不能单独保证包含其他映射和非线性模块的完整网络不爆炸
+- **组合封闭**：双随机矩阵相乘仍双随机，保持矩阵层面的行列和约束；完整深层网络稳定性仍需其他假设和实验验证
+- **约束残差流**：保留均值/归一化的约束传播，同时允许跨流混合；不等于完整映射恒等
 
-当 n=1 时，约束退化为标量 1，恰好恢复原始恒等残差——**mHC 是残差的严格推广**。
+当 n=1 时，双随机约束退化为标量 1，恰好恢复原始恒等残差；因此 mHC 可视为在多流残差映射上施加约束的一种扩展。
 
 ## 与 LayerNorm 的本质区别
 
@@ -92,7 +92,7 @@ mHC 保留 HC 全部表达能力，同时恢复恒等保证。做法是把残差
 两者**互补而非替代**：模型越大越深，只靠"每层尺度稳定"不够，还需要"跨层混合结构化、可扩展"。这就是在 norm 之外研究 HC/mHC 的根本原因——把梯度控制的战场从"单层尺度"推进到"跨层流形"。
 
 ## 关系网络
-- 扩展：[[残差连接]] — HC 是残差连接的多流推广，mHC 是残差的严格推广
+- 扩展：[[残差连接]] — HC 是残差连接的多流推广，mHC 在多流残差映射上施加双随机约束
 - 对比：[[归一化层]] — LayerNorm 管单层幅度，HC/mHC 管跨层结构
 - 相关：[[梯度消失与梯度爆炸]] — HC 无约束会加剧，mHC 通过谱范数约束缓解
 - 应用：[[Transformer架构]] — 残差路径被替换为 HC/mHC，模块内部不变
@@ -103,3 +103,7 @@ mHC 保留 HC 全部表达能力，同时恢复恒等保证。做法是把残差
 - [mHC: Manifold-Constrained Hyper-Connections (arXiv:2512.24880)](https://arxiv.org/abs/2512.24880) — mHC：双随机矩阵约束与 Sinkhorn-Knopp
 
 - [[raw/human_ai_knowledge/add-norm-vs-hc-mhc-residual-connections.md]] | [🌐 HTML](https://wolfhawkld.github.io/human_ai_knowledge/add-norm-vs-hc-mhc-residual-connections.html) - add+norm 与 HC/mHC 的幅度 vs 结构控制分析
+
+## 变更记录
+
+- 2026-09-11：更正 HC 论文首次提交与修订年份，并将 mHC 的双随机矩阵性质限定为残差混合映射层面的保证；保留原事实核验日期。

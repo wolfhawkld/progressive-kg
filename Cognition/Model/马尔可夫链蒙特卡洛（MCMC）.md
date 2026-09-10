@@ -14,11 +14,12 @@ tags:
 - 采样
 - 贝叶斯
 created: '2026-08-17'
-updated: '2026-08-17'
+updated: '2026-09-11'
 verified: '2026-08-17'
 review_due: '2027-08-17'
 sources:
 - https://zh.wikipedia.org/zh-hans/%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE%E8%92%99%E7%89%B9%E5%8D%A1%E6%B4%9B
+- https://mc-stan.org/docs/2_31/cmdstan-guide/diagnose.html
 ---
 
 # 马尔可夫链蒙特卡洛（MCMC）
@@ -33,7 +34,7 @@ sources:
 
 1. **目标**：从复杂分布 $P(\theta|D)$ 采样（常只有未归一化的 $P(D|\theta)P(\theta)$）
 2. **构造链**：设计转移核，使目标分布是链的唯一平稳分布
-3. **收敛**：链从任意起点出发，长时间运行后逼近目标分布（需 burn-in 丢弃初期样本）
+3. **收敛**：在满足不可约、非周期等遍历条件时，链运行足够久后逼近目标分布（需评估或丢弃初期样本）
 4. **采样**：收敛后用链的样本近似目标分布（估计均值/区间/边缘）
 
 ### 经典算法
@@ -44,7 +45,7 @@ sources:
 
 ## 收敛与评估
 
-- **R-hat**：多链收敛指标，< 1.2 常视为收敛
+- **R-hat**：比较链间与链内尺度的多链诊断指标，应接近 1；现代实践常以 < 1.01 作为起点，但它不是单独的收敛证明，需结合有效样本量、轨迹图和其他诊断
 - **burn-in**：丢弃早期未收敛样本
 - **样本相关性**：链内样本不独立（自相关），需足够长链
 
@@ -58,3 +59,9 @@ sources:
 ## 参考资料
 
 - [马尔可夫链蒙特卡洛 - 维基百科](https://zh.wikipedia.org/zh-hans/%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE%E8%92%99%E7%89%B9%E5%8D%A1%E6%B4%9B) — 思想、Metropolis-Hastings、吉布斯采样、收敛评估
+
+- [Stan：Diagnosing Biased HMC Inferences](https://mc-stan.org/docs/2_31/cmdstan-guide/diagnose.html) — R-hat、有效样本量和多链诊断建议
+
+## 变更记录
+
+- 2026-09-11：收紧 MCMC 遍历条件与 R-hat 阈值，并补充 Stan 诊断建议；保留原事实核验日期。

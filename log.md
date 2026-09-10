@@ -389,3 +389,12 @@
 - 复核RNA糖—磷酸骨架、链内碱基配对、蛋白质动态构象、核苷酸/多糖单体边界；遗传密码页集中承载翻译例子，其他新页保留概述。
 - 复算余弦0.96、离散互信息0.9183 bit、伯努利MLE 0.7、对角矩阵SVD截断误差1，以及InfoNCE概率0.665241/损失0.407606；InfoNCE明确期望下界与采样条件。
 - 子域MOC按目录自动收录。最终验证：11个新节点关系双向检查通过；全库lint为0 error / 0 warning / 0 info；git diff --check通过。
+
+## [2026-09-11] maintain | 全库内容审阅与纠错
+
+- 审阅143个知识页面（131 concept、11 procedure、1 hypothesis），修正32页：数学10、模型7、生物3、文化4、训练技能8。
+- 修复硬件架构的绝对化描述、CUDA等错误别名、AdamW衰减顺序与显存口径、AMP裁剪前unscale、数学公式条件、因果与贝叶斯语义、模型稳定性过度保证，以及古蜀/僰人/悬棺与宗教叙事的证据边界。
+- 详见 [[Meta/reviews/2026-09-11-global-maintenance]]：实际修复、143页覆盖清单、未解决证据缺口与后续触发条件。
+- CPU/GPU/TPU核对官方资料后更新verified；其他局部修正保留原verified并写变更记录，所有修改更新updated，未批量改变maturity。24个seed有实质内容。
+- AGI路径假设和类比学习法的效果仍待实证，保留空verified；本轮未逐条重核全库外链、运行训练/性能实验或做Obsidian视觉验收。raw/未修改。
+- 验证：全库lint为0 error / 0 warning / 0 info；git diff --check通过；AdamW、AMP顺序、矩阵阵列计数和优化器状态字节数示例复算通过。

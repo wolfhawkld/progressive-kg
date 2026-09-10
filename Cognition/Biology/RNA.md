@@ -75,10 +75,13 @@ DNA、RNA 和蛋白质使用不同的化学字母表与连接方式。RNA 序列
 - 结构：[[碱基对]] — RNA 可形成局部互补配对和二级结构
 - 规则：[[遗传密码]] — mRNA 的密码子按遗传密码指定氨基酸或终止
 - 产物：[[蛋白质]] — mRNA 在翻译中提供蛋白质氨基酸序列的信息
-- 组成关系：[[氨基酸]] — tRNA 携带氨基酸参与 mRNA 的翻译
+- 相关：[[氨基酸]] — tRNA 携带氨基酸参与 mRNA 的翻译
 
 ## 参考资料
 
 - [NHGRI：Ribonucleic Acid (RNA)](https://www.genome.gov/genetics-glossary/Ribonucleic-Acid-RNA?id=180) — RNA 的结构、常见类型、调控作用和 RNA 基因组
 - [NCBI：Expression of Genetic Information](https://www.ncbi.nlm.nih.gov/books/NBK9842/) — mRNA、tRNA、rRNA 以及从 RNA 到蛋白质的表达路径
 - [OpenStax Biology 2e §15.1：The Genetic Code](https://openstax.org/books/biology-2e/pages/15-1-the-genetic-code) — DNA—RNA—蛋白质的中心路径和翻译中的三联体读取
+
+## 变更记录
+- 2026-09-11：整体维护时统一关联中的概念边界，去除过强同义或组成关系；保留原 verified。
