@@ -356,3 +356,14 @@
 - 详见 [[Meta/reviews/2026-09-11-concept-expansion]]：逐页成熟度、核验结果、来源类型及残余边界。
 - MOC 保持目录 Dataview 查询，新页自动纳入；未改 raw/，未启动 Obsidian 人工视觉验收。
 - 最终验证：python3 _system/lint.py 为 0 error / 0 warning / 0 info；git diff --check 通过。
+
+## [2026-09-11] ingest | CLIP、对比学习、表征学习
+
+- 用户要求不存在时补入贝叶斯网络、CLIP、对比学习、表征学习；按文件名、title、aliases 查重，贝叶斯网络已存在，本次复用且未改动该页。
+- Cognition/Model 新建 [[CLIP]]、[[对比学习]]、[[表征学习]]，按 Ingest 保留 seed；verified 为 2026-09-11，review_due 为 2027-03-11。
+- 表征学习涵盖目标、信息取舍与评估协议；对比学习涵盖正负关系、InfoNCE 风格目标、SimCLR 例子及采样边界；CLIP 涵盖双编码器、双向交叉熵、零样本分类和使用限制。
+- 来源核验：Bengio/Courville/Vincent 表征学习综述、CPC/SimCLR/Supervised Contrastive Learning 原论文、Radford 2021 CLIP 论文与官方仓库；引用及支持范围写入对应页面。
+- 在词嵌入、PCA、特征工程、数据增强、交叉熵、Transformer 架构六个既有页面补回链，保留原 verified 并记录局部关联维护。
+- 对比损失例子复算：logits (4,1,-0.5) 的正例概率为 0.942599，损失为 0.059114；未运行 CLIP 模型或训练实验。
+- MOC 按目录自动收录；raw/ 未修改。
+- 验证：新节点关系双向检查通过；全库 lint 为 0 error / 0 warning / 0 info，git diff --check 通过。

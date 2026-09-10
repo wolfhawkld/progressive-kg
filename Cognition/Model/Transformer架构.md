@@ -12,7 +12,7 @@ tags:
 - 注意力机制
 - LLM
 created: '2026-07-08'
-updated: '2026-07-16'
+updated: '2026-09-11'
 verified: '2026-07-16'
 review_due: '2027-01-16'
 sources:
@@ -140,6 +140,8 @@ PE(pos, 2i+1) = cos(pos / 10000^(2i/d))
 - **Longformer/BigBird**: 稀疏注意力，支持长序列
 
 ## 关系网络
+
+- 应用：[[CLIP]] — 原始 CLIP 的文本编码器及部分视觉编码器采用 Transformer
 - [[注意力机制]] - Transformer的核心
 - [[位置编码]] - 为无位置偏置的注意力添加位置信息
 - [[残差连接]] - 深层网络训练的关键
@@ -152,3 +154,7 @@ PE(pos, 2i+1) = cos(pos / 10000^(2i/d))
 - [Attention Is All You Need](https://arxiv.org/abs/1706.03762) — 原始 Encoder–Decoder Transformer、复杂度与并行性讨论
 
 - [[raw/human_ai_knowledge/deep-learning-metaphors.md]] | [🌐 HTML](https://wolfhawkld.github.io/human_ai_knowledge/deep-learning-metaphors.html) - Transformer 作为全局统筹者的类比
+
+## 变更记录
+
+- 2026-09-11：补充 CLIP 的架构应用关系，保留原事实核验日期。
