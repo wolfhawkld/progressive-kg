@@ -14,7 +14,7 @@ tags:
 - 多分类
 - Transformer
 created: '2026-07-13'
-updated: '2026-07-17'
+updated: '2026-09-11'
 verified: '2026-07-17'
 review_due: '2027-07-17'
 sources:
@@ -101,6 +101,8 @@ $$
 
 ## 关系网络
 
+- 应用：[[InfoNCE]] — 对温度缩放后的候选分数归一化
+
 - 应用 [[注意力机制]] — 把匹配 logits 归一化为 Value 的聚合权重
 - 数值基础 [[Log-Sum-Exp]] — log-softmax 与稳定归一化的核心算子
 - 组合 [[交叉熵]] — 多类分类中常融合为稳定的 logits 损失
@@ -114,3 +116,6 @@ $$
 - [PyTorch：CrossEntropyLoss](https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html) — logits 与交叉熵的融合语义
 - [Attention Is All You Need](https://arxiv.org/abs/1706.03762) — 缩放点积注意力中的 Softmax
 - [Distilling the Knowledge in a Neural Network](https://arxiv.org/abs/1503.02531) — 蒸馏温度与软目标
+
+## 变更记录
+- 2026-09-11：补充与自监督或对比目标的关联，保留原 verified。

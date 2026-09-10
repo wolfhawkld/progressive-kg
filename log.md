@@ -376,3 +376,16 @@
 - 来源核验涵盖 NHGRI、OpenStax、NCBI Bookshelf 及几丁质材料研究；各页记录引用与支持范围。
 - 新节点关系双向维护；DNA 互补链和碱基对计数例子已复核。raw/ 未修改。
 - 验证：全库 lint 为 0 error / 0 warning / 0 info，git diff --check 通过。
+
+## [2026-09-11] ingest | 生物学、表征学习与数学基础共11个概念
+
+- 用户批准增补上一轮建议的全部11项；按文件名、title、aliases查重，并检索raw素材，未修改raw/。
+- Cognition/Biology新增：[[核苷酸]]、[[RNA]]、[[蛋白质]]、[[遗传密码]]、[[多糖]]。
+- Cognition/Math新增：[[余弦相似度]]、[[互信息]]、[[最大似然估计]]、[[奇异值分解]]。
+- Cognition/Model新增：[[自监督学习]]、[[InfoNCE]]。
+- 均按Ingest保留seed并核验来源；verified为2026-09-11。稳定生物/数学基础review_due为2027-09-11，自监督学习与InfoNCE为2027-03-11。
+- 来源包括NHGRI、OpenStax、NCBI、Stanford课程与教材、MIT线性代数课程，以及CPC、SimCLR、BERT、CLIP和互信息变分界原论文。
+- 在21个既有页面维护回链或独立页入口；旧页保留原verified并记录局部变更。奇异值页保留低秩近似概述，PCA的SVD入口改指独立分解页；区分HMM的Baum–Welch似然优化与贝叶斯推断。
+- 复核RNA糖—磷酸骨架、链内碱基配对、蛋白质动态构象、核苷酸/多糖单体边界；遗传密码页集中承载翻译例子，其他新页保留概述。
+- 复算余弦0.96、离散互信息0.9183 bit、伯努利MLE 0.7、对角矩阵SVD截断误差1，以及InfoNCE概率0.665241/损失0.407606；InfoNCE明确期望下界与采样条件。
+- 子域MOC按目录自动收录。最终验证：11个新节点关系双向检查通过；全库lint为0 error / 0 warning / 0 info；git diff --check通过。
