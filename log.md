@@ -408,3 +408,11 @@
 - 详见 [[Meta/reviews/2026-09-11-ai-math-40-concepts]]：40页清单、来源、关键边界、数值复算和验证局限。
 - 全库知识页面由143增至183；MOC自动收录。raw/、Obsidian配置、校验脚本未修改；未运行模型训练或GUI验收。
 - 最终检查：lint为0 error / 0 warning / 0 info，git diff --check通过，公式定界符和控制字符检查通过。
+
+## [2026-09-11] ingest | 跨类别概念18项
+
+- 新增生物学8、考古文化4、语言学4、方法2，均保留seed，含定义、实质正文、边界、来源与双向关联；concept/procedure页由183增至201。
+- Language新增linguistics子域MOC并接入域导航；其他使用现有目录。按文件名/title/aliases查重，并检索raw素材。
+- 来源核验和主要修正见 [[Meta/reviews/2026-09-11-cross-domain-18-concepts]]；明确基因与蛋白产物、染色质与染色体、碳十四样品与事件年代、考古分类与族群等边界。
+- 19个旧页只补关系并保留原核验日期和成熟度；新增48条反向关系，新页87条出链均有反向覆盖。raw、Obsidian配置和系统脚本未修改。
+- 最终验证：全库lint 0 errors / 0 warnings / 0 info，双向关联和控制字符检查通过，git diff --check通过。未进行GUI验收或本地方法效果实验。

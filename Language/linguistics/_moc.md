@@ -1,23 +1,18 @@
 ---
 schema_version: '1.1'
-title: 语言域概念地图
+title: 语言学地图
 type: moc
-scope: Language
+scope: Language/linguistics
 ---
 
-# 语言域概念地图
+# 语言学地图
 
-## 子域导航
-
-- [[Language/linguistics/_moc|语言学]]
-- [[Language/academic-english/_moc|📚 学术英语]]
-
-## 全域概念
+## 当前目录
 
 ```dataview
-TABLE summary AS "定义", maturity AS "成熟度", updated AS "更新日期"
+TABLE summary AS "定义", maturity AS "成熟度", verified AS "已核验"
 FROM ""
-WHERE startswith(file.folder, this.scope) AND type != "moc"
+WHERE file.folder = this.scope AND type != "moc"
 SORT title ASC
 ```
 

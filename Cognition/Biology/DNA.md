@@ -84,6 +84,11 @@ DNA 与 RNA 也不同：前者含脱氧核糖、常见碱基包括 T，后者含
 - 产物：[[蛋白质]] — 蛋白质编码 DNA 为多肽序列提供信息
 - 相关：[[氨基酸]] — 蛋白质编码信息经 RNA 指定氨基酸序列
 - 对比：[[几丁质]] — DNA 是核酸，几丁质是结构性多糖，构件与连接键不同
+- 相关：[[基因]] — 细胞基因组中的基因通常由 DNA 序列承载
+- 相关：[[染色体]] — 染色体包含被包装的 DNA 分子
+- 相关：[[细胞]] — 许多细胞以 DNA 储存遗传信息
+- 相关：[[转录]] — DNA 模板为转录提供碱基序列
+- 相关：[[糖苷键]] — DNA 中糖与碱基的连接属于核苷相关的糖苷连接，但 DNA 主链仍是磷酸二酯键
 
 ## 变更记录
 
@@ -93,3 +98,5 @@ DNA 与 RNA 也不同：前者含脱氧核糖、常见碱基包括 T，后者含
 
 - [NHGRI：Deoxyribonucleic Acid (DNA)](https://www.genome.gov/genetics-glossary/Deoxyribonucleic-Acid-DNA) — DNA 的组成、碱基序列与遗传信息
 - [OpenStax Biology 2e §3.5：Nucleic Acids](https://openstax.org/books/biology-2e/pages/3-5-nucleic-acids) — 核苷酸、磷酸二酯键、反平行双链及 DNA/RNA 的区别
+
+- 2026-09-11：补充本批跨类别新节点的反向关联；保留原verified，本次仅核验新增关系。
