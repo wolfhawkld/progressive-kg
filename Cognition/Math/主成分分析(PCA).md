@@ -13,7 +13,7 @@ tags:
 - 降维
 - 统计学习
 created: '2026-05-21'
-updated: '2026-07-16'
+updated: '2026-09-11'
 verified: '2026-07-16'
 review_due: '2027-07-16'
 sources:
@@ -199,6 +199,8 @@ print(f"保留 {pipeline[-1].n_components_} 个主成分")
 ---
 
 ## 关系网络
+
+- 前置：[[特征值与特征向量]] — 协方差矩阵的特征向量与特征值给出方向和方差
 - [[奇异值|SVD]] — PCA 的数值计算工具，更稳定
 - [[标准化|标准化(Standardization)]] — 特征量纲不宜直接比较时先缩放；PCA 本身只要求中心化
 - [[内积]] — PCA 投影 = 数据向量与主成分的内积
@@ -215,3 +217,7 @@ print(f"保留 {pipeline[-1].n_components_} 个主成分")
 - **Bishop PRML**：Chapter 12.1 — Principal Component Analysis
 
 ---
+
+## 变更记录
+
+- 2026-09-11：补充与新建基础节点的关系；保留原事实核验日期，本次不视为整页重审。

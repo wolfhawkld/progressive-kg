@@ -339,3 +339,20 @@
 - 新增一节：条件数与稳定性、有效维度与低秩近似、主导方向与谱分析、可逆性与正则化、秩亏与冗余探测
 - 关联现实应用：Hessian 条件数、LoRA 低秩、谱归一化、Tikhonov 正则化、Muon 压平奇异值尺度
 - lint: 0 error / 0 warning / 0 info
+
+## [2026-09-11] ingest | 自动微分、JVP、条件独立、特征值与特征向量、ELBO、交叉验证
+
+- 按 SCHEMA 1.1 查重（文件名、title、aliases），查阅现有正文与 raw，核验原始论文和官方/大学来源。
+- Cognition/Math 新增自动微分、JVP、条件独立、特征值与特征向量；Cognition/Model 新增 ELBO；Skill/dl-training 新增 procedure 交叉验证。
+- 新页保留 maturity: seed，已有有效 L1、多个实质 L2、来源与真实关系；verified: 2026-09-11，复核周期按理论稳定性与软件迭代区分。
+- 新节点关系已双向维护；原有反向传播、贝叶斯网络、变分推断保留概述并链接独立页，减少重复。
+- 新页手算实例已用数值计算复核 JVP、特征对及 ELBO 恒等式；本机未安装 JAX，JAX 片段仅核对官方接口。
+
+## [2026-09-11] update | 补强并核验全部 30 个原有 seed
+
+- 数学 15 个、模型 9 个、文化 6 个原 seed 全部补齐例子、推导或证据边界，升级为 growing；保留原 created，updated/verified 为 2026-09-11。
+- 纠正二项式笔误、导数连续性条件、谱与积分变换边界、do-演算规则、采样与识别假设；文化页区分史料、族属推断与宗教叙事，统一错误的引用题名。
+- 16 个原有非 seed 源页维护回链，局部修正贝叶斯网络的因果边界与无向图马尔可夫毯；这些源页保留原 verified，并记录变更范围。
+- 详见 [[Meta/reviews/2026-09-11-concept-expansion]]：逐页成熟度、核验结果、来源类型及残余边界。
+- MOC 保持目录 Dataview 查询，新页自动纳入；未改 raw/，未启动 Obsidian 人工视觉验收。
+- 最终验证：python3 _system/lint.py 为 0 error / 0 warning / 0 info；git diff --check 通过。
