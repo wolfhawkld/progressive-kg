@@ -13,7 +13,7 @@ tags:
 - LLM推理
 - 缓存
 created: '2026-07-08'
-updated: 2026-08-10
+updated: '2026-09-11'
 verified: '2026-07-16'
 review_due: '2026-10-16'
 sources:
@@ -123,8 +123,13 @@ PagedAttention 论文在其测试模型和工作负载中报告了接近零的 K
 - 应用 [[Transformer架构]] — 主要用于自回归 Transformer 的增量解码
 - 对比 [[flash-attention]] — 分别优化跨步重复计算与单次注意力的内存 IO
 - 相关 [[GPU]] — KV cache 的容量与内存带宽是 GPU 推理吞吐的常见瓶颈
+- 相关：[[自回归建模]] — KV Cache复用自回归生成中的前缀注意力状态
 
 ## 参考资料
 
 - [Hugging Face：Cache explanation](https://huggingface.co/docs/transformers/cache_explanation) — 缓存张量、位置与解码流程
 - [Efficient Memory Management for Large Language Model Serving with PagedAttention](https://arxiv.org/abs/2309.06180) — PagedAttention 与 vLLM 的原始论文
+
+## 变更记录
+
+- 2026-09-11：补充本批数学与AI新节点的反向关联；保留原verified，本次仅核验新增关系。

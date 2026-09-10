@@ -13,7 +13,7 @@ tags:
 - 分布式系统
 - HTTP
 created: '2026-05-23'
-updated: '2026-07-16'
+updated: '2026-09-11'
 verified: '2026-07-16'
 review_due: '2027-07-16'
 sources:
@@ -131,9 +131,15 @@ assert not np.isclose(zscore(zscore(14.0)), zscore(14.0))
 - 应用 [[主成分分析(PCA)]] — 重构到固定主成分子空间的投影满足 $P^2=P$
 - 对比 [[梯度下降优化]] — 收敛点是不动点，但单步更新算子通常不幂等
 - 对比 [[标准化]] — 固定参数的 Z-score 重复应用通常仍会改变数据
+- 相关：[[正交投影]] — 投影矩阵满足 $P^2=P$
+- 相关：[[贝尔曼方程]] — 不动点性质不等于算子幂等
 
 ## 参考资料
 
 - [RFC 9110 §9.2.2：Idempotent Methods](https://www.rfc-editor.org/rfc/rfc9110.html#section-9.2.2) — HTTP 幂等语义
 - [Fielding：Architectural Styles and the Design of Network-based Software Architectures](https://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm) — REST 架构背景
 - Kleppmann, *Designing Data-Intensive Applications*, Chapter 8 — 重试、故障与分布式语义
+
+## 变更记录
+
+- 2026-09-11：补充本批数学与AI新节点的反向关联；保留原verified，本次仅核验新增关系。

@@ -72,7 +72,13 @@ ELBO 是优化目标，不是自动保证推断正确的证书。
 - 前置：[[KL散度]] — KL 非负性给出下界与间隙
 - 前置：[[信息熵]] — $-\mathbb E_q\log q$ 是目标中的熵项
 - 相关：[[贝叶斯推断]] — 目标涉及证据和隐变量后验
+- 相关：[[EM算法]] — 精确E步把变分下界贴到当前观测对数似然
+- 相关：[[变分自编码器]] — ELBO 是 VAE 常用的训练目标
 
 ## 参考资料
 
 - [Blei、Kucukelbir、McAuliffe：Variational Inference: A Review for Statisticians](https://arxiv.org/html/1601.00670v9) — 第 2.2 节：ELBO 定义、KL 分解与似然—先验形式
+
+## 变更记录
+
+- 2026-09-11：补充本批数学与AI新节点的反向关联；保留原verified，本次仅核验新增关系。

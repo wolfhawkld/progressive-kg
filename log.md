@@ -398,3 +398,13 @@
 - CPU/GPU/TPU核对官方资料后更新verified；其他局部修正保留原verified并写变更记录，所有修改更新updated，未批量改变maturity。24个seed有实质内容。
 - AGI路径假设和类比学习法的效果仍待实证，保留空verified；本轮未逐条重核全库外链、运行训练/性能实验或做Obsidian视觉验收。raw/未修改。
 - 验证：全库lint为0 error / 0 warning / 0 info；git diff --check通过；AdamW、AMP顺序、矩阵阵列计数和优化器状态字节数示例复算通过。
+
+## [2026-09-11] ingest | 数学与AI概念40项
+
+- 完成用户批准的全部40项，Cognition/Math新增20页，Cognition/Model新增20页，均为有定义、公式、例子、边界与来源的seed。
+- 数学覆盖概率、采样、几何与数值分析、约束优化及Fisher信息；模型覆盖统计模型、表征与生成、语言与检索、强化学习及泛化评估。
+- 按文件名、title、aliases查重，并检索raw素材；原论文、官方教材与文档核验记录在各页，verified为2026-09-11，复核周期按理论与工具变化区分。
+- 48个已有页面补回链，词嵌入、PCA、变分推断、奇异值保留概述并接入独立页；旧页保留created、verified、maturity。新页231条关系均有反向覆盖。
+- 详见 [[Meta/reviews/2026-09-11-ai-math-40-concepts]]：40页清单、来源、关键边界、数值复算和验证局限。
+- 全库知识页面由143增至183；MOC自动收录。raw/、Obsidian配置、校验脚本未修改；未运行模型训练或GUI验收。
+- 最终检查：lint为0 error / 0 warning / 0 info，git diff --check通过，公式定界符和控制字符检查通过。

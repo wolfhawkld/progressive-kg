@@ -13,7 +13,7 @@ tags:
 - 信息检索
 - 排序融合
 created: '2026-04-29'
-updated: '2026-07-16'
+updated: '2026-09-11'
 verified: '2026-07-16'
 review_due: '2027-07-16'
 sources:
@@ -100,7 +100,12 @@ def rrf_fusion(ranked_lists, k=60):
 - 关联 [[词嵌入]] — 稠密检索常从嵌入相似度得到其中一路排名
 - 关联 [[内积]] — 向量检索常用内积或余弦相似度形成候选列表
 - 对比 [[帕累托(Pareto)]] — RRF 把多路排名直接标量化，而 Pareto 方法保留多目标非支配关系
+- 相关：[[检索增强生成]] — RAG可用RRF融合多路检索排名
 
 ## 参考资料
 
 - [Reciprocal Rank Fusion Outperforms Condorcet and Individual Rank Learning Methods](https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf) — RRF 原始论文与 $k=60$ 实验设置
+
+## 变更记录
+
+- 2026-09-11：补充本批数学与AI新节点的反向关联；保留原verified，本次仅核验新增关系。
