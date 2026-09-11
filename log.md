@@ -438,3 +438,10 @@
 - 文件名、title、aliases及raw检索未发现重复；核对The Pluralism Project导论与专题。未把所有印度教立场归为单一神学，也未把佛教列为其分支。
 - 与佛教、仪式补齐双向关联，旧页保留原核验日期与成熟度；现有MOC自动收录。
 - 全库lint为0 errors / 0 warnings / 0 info；git diff --check通过。raw及配置未修改。
+
+## [2026-09-11] ingest | 直接关联seed24项
+
+- 按用户确认新增文化6、生物5、数学5、AI与训练4、语言4，共24个有正文与核验来源的seed。
+- 新页118条关系出链均有反向关联；PEFT页的LoRA细节归入独立页，旧页保留原verified与成熟度。
+- 全库知识页230个，其中seed111个；lint 0 errors / 0 warnings / 0 info，差异格式检查通过。
+- 详情：[[2026-09-11-direct-seed-24-concepts]]。
