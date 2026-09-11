@@ -431,3 +431,10 @@
 - 特别澄清广义基督教与新教、金刚乘与大乘的包含关系、苏菲与教派的交叉关系，以及宗教身份与族群身份的区别。
 - 三页相互建立有说明的比较关系，并与仪式页建立双链；仪式页保留原created、verified、maturity。现有MOC自动收录，raw与配置未修改。
 - 验证：全库lint为0 errors / 0 warnings / 0 info，git diff --check通过；3页共9条出链均有反向关系。
+
+## [2026-09-11] ingest | 印度教
+
+- 新增 [[Culture/thought/印度教]]，保留seed；补历史与经典、法/业/轮回/解脱、主要虔敬传统和实践，区分共同观念与内部差异。
+- 文件名、title、aliases及raw检索未发现重复；核对The Pluralism Project导论与专题。未把所有印度教立场归为单一神学，也未把佛教列为其分支。
+- 与佛教、仪式补齐双向关联，旧页保留原核验日期与成熟度；现有MOC自动收录。
+- 全库lint为0 errors / 0 warnings / 0 info；git diff --check通过。raw及配置未修改。
