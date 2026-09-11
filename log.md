@@ -416,3 +416,10 @@
 - 来源核验和主要修正见 [[Meta/reviews/2026-09-11-cross-domain-18-concepts]]；明确基因与蛋白产物、染色质与染色体、碳十四样品与事件年代、考古分类与族群等边界。
 - 19个旧页只补关系并保留原核验日期和成熟度；新增48条反向关系，新页87条出链均有反向覆盖。raw、Obsidian配置和系统脚本未修改。
 - 最终验证：全库lint 0 errors / 0 warnings / 0 info，双向关联和控制字符检查通过，git diff --check通过。未进行GUI验收或本地方法效果实验。
+
+## [2026-09-11] ingest | 钟馗
+
+- 新增 [[Culture/thought/钟馗]]，保留seed，含传说与历史证据、节令习俗、夜游/秤鬼/嫁妹图像题材三个实质章节。
+- 全库文件名、title、aliases与raw检索未发现重复；核对故宫两件藏品及大都会颜庚作品说明，区分传说记载、画作证据和馆方推测，未裁定最早起源。
+- 与仪式、神仙信仰建立双向关联；旧页保留created、verified、maturity，思想与信仰MOC自动收录。
+- 全库lint：0 errors / 0 warnings / 0 info；git diff --check通过。raw和配置未修改。
