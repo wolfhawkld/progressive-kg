@@ -423,3 +423,11 @@
 - 全库文件名、title、aliases与raw检索未发现重复；核对故宫两件藏品及大都会颜庚作品说明，区分传说记载、画作证据和馆方推测，未裁定最早起源。
 - 与仪式、神仙信仰建立双向关联；旧页保留created、verified、maturity，思想与信仰MOC自动收录。
 - 全库lint：0 errors / 0 warnings / 0 info；git diff --check通过。raw和配置未修改。
+
+## [2026-09-11] ingest | 佛教、基督教、伊斯兰教
+
+- 新增 [[Culture/thought/佛教]]、[[Culture/thought/基督教]]、[[Culture/thought/伊斯兰教]]，均保留seed；覆盖起源与信仰、经典与主要传统、实践及理解边界。
+- 全库文件名/title/aliases查重并检索raw；核对The Pluralism Project的导论及专题资料，来源支持范围记于各页。区分信仰宣认与历史陈述，不把任何单一分支代表整个宗教。
+- 特别澄清广义基督教与新教、金刚乘与大乘的包含关系、苏菲与教派的交叉关系，以及宗教身份与族群身份的区别。
+- 三页相互建立有说明的比较关系，并与仪式页建立双链；仪式页保留原created、verified、maturity。现有MOC自动收录，raw与配置未修改。
+- 验证：全库lint为0 errors / 0 warnings / 0 info，git diff --check通过；3页共9条出链均有反向关系。
