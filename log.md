@@ -445,3 +445,11 @@
 - 新页118条关系出链均有反向关联；PEFT页的LoRA细节归入独立页，旧页保留原verified与成熟度。
 - 全库知识页230个，其中seed111个；lint 0 errors / 0 warnings / 0 info，差异格式检查通过。
 - 详情：[[2026-09-11-direct-seed-24-concepts]]。
+
+## [2026-09-14] ingest | 支持向量机
+
+- 新增 [[Cognition/Model/支持向量机]]，保留 seed；三个 L2：最大间隔分类（含泛化界与凸 QP 求解）、对偶形式与核技巧、软间隔与损失函数视角。
+- 全库文件名/title/aliases 与 raw 检索均未发现重复；核技巧、对偶问题暂以正文 L3 承载，未拆分为独立概念页（SCHEMA §4.2 拆分条件未满足）。
+- 与 11 个已有概念建立双向关联：凸性与凸优化、KKT条件、拉格朗日乘子法、损失函数、正则化、逻辑回归、经验风险最小化、内积、正定与半正定矩阵、标准化、过拟合。
+- 来源 4 条（scikit-learn SVM 文档、Cortes & Vapnik 1995 原始论文、Wikipedia SVM 与 Kernel method），均实测 HTTP 200 可访问。
+- 全库 lint 为 0 errors / 0 warnings / 0 info（初始孤儿警告已由反向关联消除）；raw 与配置未修改。
