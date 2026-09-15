@@ -462,3 +462,12 @@
 - 查重：两个概念的文件名、title、aliases 及 raw 检索均无重复；DAG 此前仅被 5 处正文引用，无独立节点。
 - 来源：DAG 5 条、遗忘曲线 4 条，全部实测 HTTP 200；psychclassics.yorku.ca 不可达，故未采用。
 - 全库 lint 为 0 errors / 0 warnings / 0 info（两页初始均为孤儿，已由反向关联消除）；raw 与配置未修改。
+
+## [2026-09-15] ingest | 认知负荷
+
+- 新增 [[Cognition/life/认知负荷]]（aliases: Cognitive Load、认知负荷理论、Cognitive Load Theory）：工作记忆瓶颈与理论来源（Sweller、Miller 1956、chunk 概念）、手段–目的分析为何消耗本应用于建构图式的资源、三类负荷对照表（内在／外在／相关）、五项教学效应（范例、分散注意、通道、完成问题、专长逆转）、边界与争议。
+- 与 4 个已有概念建立关联：艾宾浩斯遗忘曲线、类比导航学习法、注意力机制、AGI实现路径-人类智能融合。
+- 别名冲突修正：`CLT` 已被 [[中心极限定理]] 占用，本页移除该别名，并在正文「边界」节注明缩写歧义；该冲突由 lint 捕获（error: ambiguous alias）后修正。
+- 主动未收录 `element interactivity`：Wikipedia 的 cognitive load 与 cognitive load theory 两个条目均未覆盖该构念，无可靠来源故不写入。
+- 来源 6 条，全部实测 HTTP 200；Sweller 1988 原始论文的 DOI/出版商链接返回 403，故未列入并在正文说明。
+- 全库 lint 为 0 errors / 0 warnings / 0 info；raw 与配置未修改。
