@@ -479,3 +479,13 @@
 - 已存在概念追加参考资料：[[艾宾浩斯遗忘曲线]]（把曲线放回完整遗忘机制家族）、[[认知负荷]]（短期记忆 3–5 项与工作记忆四成分是其「资源有限」前提的实验背景）；两页 updated 同步。
 - 未创建新概念：话题中涉及的候选（工作记忆、情景记忆、语义记忆、程序性记忆、间隔重复、提取练习、干扰理论、加工水平效应）均为「高度相关但当前无节点」，按候选规则向用户报告后再决定，本轮不静默建页。
 - 全库 lint 为 0 errors / 0 warnings / 0 info。
+
+## [2026-09-15] maintain | 补齐 SVM 与 DAG 的正文级核验
+
+- 触发：用户指出"是否该在这两个 skill 生成内容时加 web_search 作为多路信息源之一"——若概念很新，不搜可能不知道它存在或脑中是过期版本。
+- 规则侧：`_system/OPERATIONS.md` Ingest 步骤 3 由「**如需补充**，web_search」改为「检索素材（多路来源，强制）」，web_search 列为必做并明确三个目的（发现 / 时效 / 覆盖）；通用注意事项新增 4 条（只验 URL 可达 ≠ 核验、搜索结果不可全信、新概念必须靠 search、教科书常识也要过一遍 search）。SCHEMA.md 未改。
+- 内容侧：对 2026-09-14 建的两个 page 补做正文级核验。
+  - [[支持向量机]]：`web_search` + `web_extract`（scikit-learn SVM 页、Wikipedia SVM / SMO / Positive-definite kernel）。补入 sigmoid 核、$\gamma>0$、Platt scaling 用额外交叉验证拟合、SMO 出处（Platt 1998, Microsoft Research）；把未落到正文的表述（"只含两个变量的子问题"、自填复杂度 $O(n^2)$~$O(n^3)$）改回来源原话。Sources 增补 2 条。
+  - [[有向无环图]]：补入 Wikipedia 原文的邻接矩阵等价判据（$A+I$ 非负 0/1 且特征值全正）与传递规约/哈斯图这组 DAG 特有概念。原有论断（拓扑排序等价性、可达关系即偏序、Kahn 线性时间）经正文确认无误。
+- 两页均保留 `maturity: seed`，未自行升级（按流程由人工批准 growing/evergreen）；`verified` 现已具备正文依据。
+- 全库 lint 为 0 errors / 0 warnings / 0 info。
