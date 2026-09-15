@@ -471,3 +471,11 @@
 - 主动未收录 `element interactivity`：Wikipedia 的 cognitive load 与 cognitive load theory 两个条目均未覆盖该构念，无可靠来源故不写入。
 - 来源 6 条，全部实测 HTTP 200；Sweller 1988 原始论文的 DOI/出版商链接返回 403，故未列入并在正文说明。
 - 全库 lint 为 0 errors / 0 warnings / 0 info；raw 与配置未修改。
+
+## [2026-09-15] link | memory-classification-and-forgetting -> [艾宾浩斯遗忘曲线, 认知负荷]
+
+- 人机知识《记忆的分类，以及遗忘的科学说明》发布（human_ai_knowledge，commit 83f700e）：20 条来源，配图 figures/memory-taxonomy.svg。
+- 复制话题 MD 到 `raw/human_ai_knowledge/memory-classification-and-forgetting.md`（raw 只读引用）。
+- 已存在概念追加参考资料：[[艾宾浩斯遗忘曲线]]（把曲线放回完整遗忘机制家族）、[[认知负荷]]（短期记忆 3–5 项与工作记忆四成分是其「资源有限」前提的实验背景）；两页 updated 同步。
+- 未创建新概念：话题中涉及的候选（工作记忆、情景记忆、语义记忆、程序性记忆、间隔重复、提取练习、干扰理论、加工水平效应）均为「高度相关但当前无节点」，按候选规则向用户报告后再决定，本轮不静默建页。
+- 全库 lint 为 0 errors / 0 warnings / 0 info。
