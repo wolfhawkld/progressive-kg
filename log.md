@@ -489,3 +489,14 @@
   - [[有向无环图]]：补入 Wikipedia 原文的邻接矩阵等价判据（$A+I$ 非负 0/1 且特征值全正）与传递规约/哈斯图这组 DAG 特有概念。原有论断（拓扑排序等价性、可达关系即偏序、Kahn 线性时间）经正文确认无误。
 - 两页均保留 `maturity: seed`，未自行升级（按流程由人工批准 growing/evergreen）；`verified` 现已具备正文依据。
 - 全库 lint 为 0 errors / 0 warnings / 0 info。
+
+## [2026-09-15] promote | seed → growing ×4
+
+- 经用户确认，将 4 个已完成正文级核验的节点由 `seed` 升为 `growing`：
+  - [[支持向量机]]（关系 11 / 来源 6；verified 与 review_due 同步为 2026-09-15 / 2027-09-15）
+  - [[有向无环图]]（关系 9 / 来源 5）
+  - [[艾宾浩斯遗忘曲线]]（关系 3 / 来源 4）
+  - [[认知负荷]]（关系 4 / 来源 6）
+- 升级前逐项核对 growing 硬性条件：≥2 个指向现有概念的关系、有来源、无断链——4 项全部满足。
+- `confidence` 保持不变：SVM 与 DAG 为 high；艾宾浩斯遗忘曲线（函数形式仍有争议）与认知负荷（Wikipedia 条目带 citation needed 与疑似 AI 生成文本标记）保持 medium，并在变更记录中写明后续需补的原始文献。
+- 4 页均补变更记录；全库 lint 为 0 errors / 0 warnings / 0 info。
