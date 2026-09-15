@@ -453,3 +453,12 @@
 - 与 11 个已有概念建立双向关联：凸性与凸优化、KKT条件、拉格朗日乘子法、损失函数、正则化、逻辑回归、经验风险最小化、内积、正定与半正定矩阵、标准化、过拟合。
 - 来源 4 条（scikit-learn SVM 文档、Cortes & Vapnik 1995 原始论文、Wikipedia SVM 与 Kernel method），均实测 HTTP 200 可访问。
 - 全库 lint 为 0 errors / 0 warnings / 0 info（初始孤儿警告已由反向关联消除）；raw 与配置未修改。
+
+## [2026-09-15] ingest | 有向无环图 + 艾宾浩斯遗忘曲线
+
+- 新增 [[Cognition/Math/有向无环图]]（aliases: DAG、Directed Acyclic Graph）：定义与等价刻画（拓扑排序存在、邻接矩阵幂零、良基递推）、无环性为何是关键约束（偏序与递推、概率分解与因果语义）、主要应用与「结构≠语义」的辨析；与 9 个已有概念建立双向关联。
+- 新增 [[Cognition/life/艾宾浩斯遗忘曲线]]（aliases: 艾宾浩斯曲线、遗忘曲线、Forgetting Curve）：1885 年无意义音节自我实验与节省率度量、Ebbinghaus 原文公式（c=1.25、k=1.84）及其计算值、影响衰减的因素与复习时机、边界与常见误读（原文并未研究间隔重复）；与 2 个已有概念关联。
+- 命名说明：用户报的是「艾宾浩斯曲线」，落库采用更精确的规范名「艾宾浩斯遗忘曲线」以区别于「学习曲线」，原词保留为 alias。
+- 查重：两个概念的文件名、title、aliases 及 raw 检索均无重复；DAG 此前仅被 5 处正文引用，无独立节点。
+- 来源：DAG 5 条、遗忘曲线 4 条，全部实测 HTTP 200；psychclassics.yorku.ca 不可达，故未采用。
+- 全库 lint 为 0 errors / 0 warnings / 0 info（两页初始均为孤儿，已由反向关联消除）；raw 与配置未修改。
