@@ -12,7 +12,7 @@ tags:
 - 对比损失
 - 表示学习
 created: '2026-09-11'
-updated: '2026-09-11'
+updated: '2026-09-16'
 verified: '2026-09-11'
 review_due: '2027-03-11'
 sources:
@@ -96,3 +96,4 @@ InfoNCE 是一种以候选分类为核心的对比目标，而“对比学习”
 - [Chen 等：A Simple Framework for Contrastive Learning of Visual Representations](https://proceedings.mlr.press/v119/chen20j.html) — SimCLR 的批内负例、归一化表示、温度和投影头
 - [Radford 等：Learning Transferable Visual Models From Natural Language Supervision](https://proceedings.mlr.press/v139/radford21a.html) — CLIP 的双向图文匹配与对称交叉熵目标
 - [Poole 等：On Variational Bounds of Mutual Information](https://arxiv.org/abs/1905.06922) — §2.3 给出InfoNCE期望下界、最优打分及候选数上限的证明；2026-09-11 核验
+- [[raw/human_ai_knowledge/representation-contrastive-clip.md]] | [🌐 HTML](https://wolfhawkld.github.io/human_ai_knowledge/representation-contrastive-clip.html) — 人机知识《表征学习、对比学习与 CLIP 的异同》：CPC/InfoNCE 在演进谱系中的位置（2018，把对比目标工程化，使后续 SimCLR/CLIP 成为可能）（Damon + Nemesis, 2026-09-16）

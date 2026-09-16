@@ -14,7 +14,7 @@ tags:
 - 视觉语言
 - 对比学习
 created: '2026-09-11'
-updated: '2026-09-11'
+updated: '2026-09-16'
 verified: '2026-09-11'
 review_due: '2027-03-11'
 sources:
@@ -126,6 +126,7 @@ CLIP 分数表示候选图文的模型兼容性，零样本 softmax 也只是给
 
 - [Radford 等：Learning Transferable Visual Models From Natural Language Supervision（PMLR, 2021）](https://proceedings.mlr.press/v139/radford21a.html) — 原始 CLIP 的训练目标、数据规模、架构与零样本评估
 - [OpenAI CLIP 官方仓库](https://github.com/openai/CLIP) — 官方实现、推理 API、零样本 CIFAR-100 示例和 prompt 模板
+- [[raw/human_ai_knowledge/representation-contrastive-clip.md]] | [🌐 HTML](https://wolfhawkld.github.io/human_ai_knowledge/representation-contrastive-clip.html) — 人机知识《表征学习、对比学习与 CLIP 的异同》：**系统层**定位；N×N 批内负样本结构、CLIP 属**弱监督**而非自监督、以及 CLIP → SigLIP 改的是损失形式而非架构（Damon + Nemesis, 2026-09-16）
 
 ## 变更记录
 - 2026-09-11：补充本批自监督、InfoNCE或余弦相似度的入口与关系说明；保留原 verified。

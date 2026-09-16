@@ -536,3 +536,12 @@
   - 加工水平效应：「深度」缺少可独立量化的定义，模型解释力仍有争议
   - 四个记忆类型页：分别待补容量测量的范式差异、内侧颞叶分工、语义组织模型、技能习得阶段模型
 - 「记忆与学习」簇现状：10 个节点全部为 growing 或以上；lint 为 0 errors / 0 warnings / 0 info。
+
+## [2026-09-16] link | representation-contrastive-clip -> [表征学习, 对比学习, CLIP, InfoNCE]
+
+- 人机知识《表征学习、对比学习与 CLIP 的异同》发布（human_ai_knowledge，commit 7669267）：6 条一手来源，配图 figures/representation-contrastive-clip.svg。
+- 复制话题 MD 到 `raw/human_ai_knowledge/representation-contrastive-clip.md`（raw 只读引用）。
+- 已存在概念追加参考资料：[[表征学习]]（问题层定位）、[[对比学习]]（方法层定位 + SimCLR 三条发现）、[[CLIP]]（系统层定位 + 弱监督辨析）、[[InfoNCE]]（谱系位置）；四页 updated 同步为 2026-09-16。
+- 该话题澄清了三个概念的**层级关系**（问题层 → 方法层 → 系统层），可直接作为本库三页之间的定位说明。
+- 检索过程中发现**时效性内容**：CLIP 之后的 SigLIP（pairwise sigmoid 损失、解耦 batch size）与 LLM2CLIP（AAAI 2026），已写入人机知识；本库 [[CLIP]] 页若后续升级应一并补入。
+- 全库 lint 为 0 errors / 0 warnings / 0 info。
