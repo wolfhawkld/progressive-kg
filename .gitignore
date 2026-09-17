@@ -3,3 +3,4 @@ _system/lint-report.md
 *.tmp
 __pycache__/
 *.py[cod]
+/_system/living-memory.local.json
