@@ -12,7 +12,7 @@ tags:
 - 注意力机制
 - LLM
 created: '2026-07-08'
-updated: '2026-09-11'
+updated: '2026-09-19'
 verified: '2026-07-16'
 review_due: '2027-01-16'
 sources:
@@ -159,6 +159,7 @@ PE(pos, 2i+1) = cos(pos / 10000^(2i/d))
 - [Attention Is All You Need](https://arxiv.org/abs/1706.03762) — 原始 Encoder–Decoder Transformer、复杂度与并行性讨论
 
 - [[raw/human_ai_knowledge/deep-learning-metaphors.md]] | [🌐 HTML](https://wolfhawkld.github.io/human_ai_knowledge/deep-learning-metaphors.html) - Transformer 作为全局统筹者的类比
+- [[raw/human_ai_knowledge/jev-vs-bert.md]] | [🌐 HTML](https://wolfhawkld.github.io/human_ai_knowledge/jev-vs-bert.html) — 人机知识《Jev 与 BERT 的实现原理对比》：encoder-only 一侧（BERT）与「不生成文本」的新模型（Jev）在「无自回归解码」上的共性，以及二者输出端的根本分歧（Damon + Nemesis, 2026-09-19）
 
 ## 变更记录
 
