@@ -561,3 +561,14 @@
 - 因 human_ai_knowledge 侧改稿（该仓库 commit 66248eb），同步更新 raw 副本 `raw/human_ai_knowledge/jev-vs-bert.md`。
 - 修订内容：硬件类比一节由「失效的三点」改为「适用层级 + 跨层提示」；保留「两根轴被压成一根」这条实质判断（会导出错误预测），另两条降级为提示。
 - 按 raw 规则，此处为**显式记录**的同步（非静默改写）。节点关系与参考资料无需变动：本文已关联的 [[Transformer架构]]、[[自回归建模]]、[[概率校准]]、[[因果掩码]]、[[解码策略]] 五页不受影响。
+
+## [2026-09-22] link | rlhf-rlvr-rlcd -> [强化学习, 策略梯度, 概率校准, 贝尔曼方程, 马尔可夫决策过程]
+
+- 人机知识《RLHF / RLVR / RLCD：三种 RL 后训练范式的对比》发布（human_ai_knowledge，commit 71d0476）：10 条来源，配图 figures/rlhf-rlvr-rlcd.svg。
+- 复制话题 MD 到 `raw/human_ai_knowledge/rlhf-rlvr-rlcd.md`。
+- 已存在概念追加参考资料：[[强化学习]]、[[策略梯度]]（PPO / GRPO 算法层）、[[概率校准]]（把校准当奖励的 RLCD 路线与前驱 Rewarding Doubt）、[[贝尔曼方程]]（value function 与 value-free 的取舍）、[[马尔可夫决策过程]]（LLM 后训练的 MDP 实例化）；五页 updated 同步为 2026-09-22。
+- 该话题澄清了两条可回填本库的判据：
+  - **奖励信号的客观性与适用域呈反向关系**：主观偏好（开放域）→ 客观正确（有真值）→ 客观校准（有界决策）。可回填到 [[强化学习]] 的适用边界讨论。
+  - **RLVR 的能力上限争议**（NeurIPS 2025, arXiv 2504.13837）：pass@k 下 base model 在高 k 反超，RL 提升的是采样效率。这是一条重要的**反直觉且有出处**的结论，本库现有 RL 相关页尚未覆盖。
+- 候选概念未建页（按规则报告）：[[RLHF]]、[[RLVR]]、[[RLCD]]、[[GRPO]]、[[奖励模型]]、[[过程奖励模型]]、[[熵坍缩]] 均无节点；其中 GRPO 与奖励模型具备独立定义与足够主干，可考虑建成 seed。
+- 全库 lint 为 0 errors / 0 warnings / 0 info。
