@@ -686,3 +686,18 @@
 - 贝尔曼方程页补 1 条：应用 DDQN（TD 目标是贝尔曼最优方程的采样近似）
 - 同步更新 2 页 updated → 2026-10-06
 - lint：0 error / 0 warning / 0 info（DDQN 与 示范学习 的 no-inbound 均消除）
+
+## [2026-10-06] ingest | RL/模仿学习家族 7 个待建候选实体化
+
+- 新增 7 个概念页（Cognition/Model，均 growing, confidence high）：
+  - Q-learning — TD 更新动作价值的无模型离线策略算法（表格原型）
+  - DQN — 神经网络逼近 Q + 经验回放 + 目标网络（深度 RL 奠基）
+  - 经验回放 — 缓冲区反复采样，打破样本时间相关性
+  - 优先经验回放 — 按 TD 误差加权采样（PER，与 DDQN 正交）
+  - 行为克隆 — 示范当监督数据学 s→a 映射（分布偏移/复合误差）
+  - 逆强化学习 — 从示范推断奖励函数再 RL（双层优化）
+  - 生成对抗网络 — 生成器/判别器极小极大博弈（GAIL 借用）
+- 批量把 10 处「待建」替换为真实双链（DDQN 4处、示范学习 3处、DQN/经验回放/Q-learning 各1处）
+- 修复：DQN「核心机制」L2 lead
+- 日期按系统时间 2026-10-06，review_due 按年 2027-10-06
+- lint：0 error / 0 warning / 0 info
