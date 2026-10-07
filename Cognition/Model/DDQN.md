@@ -84,3 +84,4 @@ $$y = r + \gamma\, Q\!\left(s', \arg\max_{a'} Q(s',a';\theta);\ \theta^-\right)$
 - [强化学习经典文章研读(I) - 南开大学](https://ai.nankai.edu.cn/bijiRL-I.pdf) — Double Q-learning 与 Double DQN 原文研读、高估问题实验证据
 - [深度强化学习 - 北京大学张志华](https://www.math.pku.edu.cn/teachers/zhzhang/drl_v1.pdf) — 高估偏差的不等式推导、DQN 改进方法体系（经验回放/目标网络/DDQN/Dueling/Noisy Net）
 - [深度强化学习综述 - Jiayue Cai](http://coladrill.github.io/2018/10/21/%E6%B7%B1%E5%BA%A6%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%BB%BC%E8%BF%B0) — DDQN 与 DQN 的实现差异、两套参数的分工
+- [[raw/human_ai_knowledge/tas-vs-rl-boss-ai.md]] | [🌐 HTML](https://wolfhawkld.github.io/human_ai_knowledge/tas-vs-rl-boss-ai.html) — 人机知识《TAS 与 RL 打 boss 的两条路线对比》：TAS 产出输入序列、RL 产出策略函数；其中用空洞骑士的公开 RL 项目说明打 boss 需要哪些 RL 技巧（Nemesis, 2026-10-07）（案例中点名 Double DQN / Dueling DQN 是打空洞骑士 boss 的改进项之一）

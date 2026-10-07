@@ -722,3 +722,20 @@
 - 新增来源 1 条（DeepMind specification gaming），抓正文核验。
 - maturity 分布：**25 evergreen / 129 growing / 112 seed**。
 - 全库 lint 为 0 errors / 0 warnings / 0 info。
+
+## [2026-10-07] link | tas-vs-rl-boss-ai -> [强化学习, DDQN, 优先经验回放, 行为克隆, 示范学习]
+
+- **来源**：人机知识《TAS 与 RL：让 AI 打 boss 的两条路线对比》（Nemesis, 2026-10-07，`human_ai_knowledge` commit `7ef5fd9`）。
+- **raw 归档**：`raw/human_ai_knowledge/tas-vs-rl-boss-ai.md`（不可变层）。
+- **关联处理**：给 5 个已存在节点追加 `参考资料` 链接——
+  - [[强化学习]]（主对象：全文以 RL 与 TAS 的对比组织，含 Go-Explore 把状态回退引入 RL）
+  - [[DDQN]]（案例点名 Double DQN / Dueling DQN 是打空洞骑士 boss 的改进项）
+  - [[优先经验回放]]（案例点名 Proportional Prioritized Experience Replay）
+  - [[行为克隆]]（SilksongRL 用 behavior cloning 混入人类示范数据）
+  - [[示范学习]]（行为克隆作为人类知识进入 RL 的通道）
+- **候选节点（按规则报告，未建页）**：
+  - `TAS（工具辅助速通）` — 本库无此节点；有独立定义（TASVideos 术语体系）、跨域引用价值，主干足够，可建 seed
+  - `Go-Explore` — 无；有原论文（Nature 2021）与明确机制（先返回再探索），可建 seed
+  - `奖励黑客 / specification gaming` — 无；与 [[强化学习]] 的"奖励与任务成功的边界"一节直接呼应（该节刚补的 DeepMind 来源即此概念），建议建
+  - `探索与利用` — 无；是 RL 的基本张力，DDQN/优先经验回放等节点都在绕它转，主干足够
+- 全库 lint 为 0 errors / 0 warnings / 0 info。
