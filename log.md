@@ -755,3 +755,19 @@
 - **来源**：12 条全部 HTTP 200 且抓正文核验（Nature 590 / arXiv 2004.12919 / Uber 官方解读 / Wikipedia Reward hacking·Goodhart·Exploration–exploitation·MAB / 中文维基 TAS竞速 / TASVideos / libTAS / DeepMind）。
 - maturity 分布：25 evergreen / **133** growing / 112 seed（新增 4 个 growing）。
 - 全库 lint 为 0 errors / 0 warnings / 0 info。
+
+## [2026-10-07] ingest | 速通（新建子域 Culture/games）
+
+- **立项依据**：[[TAS]] 页「定义与两条边界」一节的 `待建：速通`。
+- **域决策**：新建子域 **`Culture/games`（🎮 游戏文化）**，并在 `Culture/_moc.md` 子域导航中加入入口（现为四项：历史考古与古文明 / 思想与信仰 / 艺术 / 游戏文化）。理由：速通是游戏文化的现象，不属于 `Cognition/Model`——[[TAS]] 当初落在 `Cognition/Model` 是因为它与 RL 的对照关系而建，**是否把 TAS 一并迁入 `Culture/games` 留给用户决定**（已在速通页变更记录中标注）。
+- **节点结构**（`Culture/games/速通.md`，growing / confidence: high，L2×5）：
+  1. **定义与「规则」在哪**——维基定义（planned routes / sequence breaking / glitches）；**「最快」不是客观量，而是由社区规则定义的**；
+  2. **完成度分类**——Any% / 100% / Low% / Glitchless / No Major Glitches 对照表；两个实例：超级马里奥兄弟（32 关的 Any% 只需打 8 关，100% 称 Warpless）、超级马里奥世界（96 Exit vs **0 Exit**，后者不破关靠任意代码执行）；
+  3. **与 TAS 的分野：RTA**——中文维基逐字：「由於在展示 TAS 的遊玩過程中，玩家實際上沒有在操作遊戲，因此 **TAS 並不會與 RTA 同台競技**」；并指出**计时口径（实时 vs 游戏内计时）本身也是规则的一部分**；
+  4. **留证与验证**——Doom/Quake 时代的可回放 demo 文件 → 1996 起 SDA（不做排行榜，只展示最快）→ 2011 Twitch「使验证与保存更容易」→ 2014 Speedrun.com（集中排行榜）；
+  5. **作为文化现象**——Games Done Quick：一年两次的速通慈善马拉松，2010 年起，AGDQ（Prevent Cancer Foundation）/ SGDQ（无国界医生）。
+- **关系**：速通 ← 组成 ← [[TAS]]（TAS 是速通子类别）；对比 [[强化学习]]（速通优化时间、RL 优化奖励）；另加 `待建：任意代码执行`、`待建：游戏内计时与实时计时`。TAS 页的 `待建：速通` 已替换为真实双链。
+- **来源** 4 条全部 HTTP 200 且抓正文核验。
+- **主动缩范围三处**（写入变更记录）：① 计时口径只点到未展开；② 分段（segmented）/ 单关（IL）类别本轮来源未核到定义，**不臆造**；③ GDQ 历史募款总额未核，故未写数字。
+- maturity 分布：25 evergreen / **134** growing / 112 seed。
+- 全库 lint 为 0 errors / 0 warnings / 0 info。

@@ -12,6 +12,7 @@ scope: Culture
 - [[Culture/history-archaeology/_moc|🏺 历史考古与古文明]]
 - [[Culture/thought/_moc|🕉️ 思想与信仰]]
 - [[Culture/arts/_moc|🎼 艺术]]
+- [[Culture/games/_moc|🎮 游戏文化]]
 
 ## 全域概念
 
