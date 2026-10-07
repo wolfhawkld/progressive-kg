@@ -78,7 +78,7 @@ $$y = r + \gamma\, Q\!\left(s', \arg\max_{a'} Q(s',a';\theta);\ \theta^-\right)$
 - 前置：[[Q-learning]] — DDQN 的表格版原型，高估问题的源头
 - 相关：[[经验回放]] — DQN/DDQN 的稳定训练机制
 - 相关：[[优先经验回放]] — 与 DDQN 常并列的 DQN 改进
-
+- 相关：[[探索与利用]] — ε-greedy 等探索策略是此类价值型算法的直接超参
 ## 参考资料
 
 - [强化学习经典文章研读(I) - 南开大学](https://ai.nankai.edu.cn/bijiRL-I.pdf) — Double Q-learning 与 Double DQN 原文研读、高估问题实验证据

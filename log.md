@@ -739,3 +739,19 @@
   - `奖励黑客 / specification gaming` — 无；与 [[强化学习]] 的"奖励与任务成功的边界"一节直接呼应（该节刚补的 DeepMind 来源即此概念），建议建
   - `探索与利用` — 无；是 RL 的基本张力，DDQN/优先经验回放等节点都在绕它转，主干足够
 - 全库 lint 为 0 errors / 0 warnings / 0 info。
+
+## [2026-10-07] ingest | 四个 RL/游戏 AI 概念：TAS · Go-Explore · 奖励黑客 · 探索与利用
+
+- **立项依据**：均来自人机知识《TAS 与 RL 打 boss 的两条路线对比》的跨项目关联报告（上一提交 `976fcb1`），四个候选全部建成。
+- **域**：`Cognition/Model`（与既有 [[强化学习]]／[[DDQN]]／[[贝尔曼方程]] 同邻，便于对照导航）。
+- **逐概念**（均 growing / confidence: high，来源抓正文核验）：
+  - **[[TAS]]**（aliases 工具辅助速通／Tool-Assisted Speedrun）——L2×4：定义与两条边界（vs 金手指：只操纵输入不改游戏数据；vs RTA：不在实时约束下）／使能条件（确定性 + 状态可存取 + RNG 操纵）／输入即产物（movie file 与 sync verification）／与 RL 的坐标对照。
+    - 关键实据：中文维基"以完全不变动游戏本体为前提"；维基"precise inputs recorded with tools"；libTAS 的 trans-layer 自述；TASVideos 术语表（Determinism/Desync/Savestate/Frame advance/Luck manipulation/Sync Verification）。
+  - **[[Go-Explore]]**——L2×3：两步结构（返回 + 探索；Uber 三步解读逐字）／它针对的难探索机制（状态稀释、无回顾性）／结果与边界（**鲁棒化不可省**、需状态可存档、后续工作）。
+  - **[[奖励黑客]]**（aliases Reward Hacking／Specification Gaming／规格博弈）——L2×5：定义（"literal, formal specification… without actually achieving an outcome that the programmers intended"）／为何内在不可避免（2016 OpenAI 五大具体问题之一；大任务空间+有限样本下"全局不可避免"）／与古德哈特定律的关系／早期实例 Eurisko(1983)／**与 [[TAS]] 的对照表**（TAS 钻游戏实现的漏洞=被欢迎；本概念钻奖励规格的漏洞=失败模式）。
+  - **[[探索与利用]]**（aliases Exploration–Exploitation Dilemma）——L2×4：两难定义（"利用"基于可能不完整甚至误导的当前认识）／多臂老虎机与三种经典方法（ε-greedy / Thompson sampling / UCB）／在 RL 中的形态（把每个选择当 MAB；探索奖励/预测式/噪声四条方向）／难探索问题上该张力的失效与 Go-Explore 的解法。
+- **关系网（双向已对齐）**：新增出链共 15 条；回链补入 [[强化学习]]（+4）、[[DQN]]（+1）、[[DDQN]]（+1）。四个新节点入链数分别为 4 / 4 / 2 / 3，无孤儿。
+- **修的两个自查问题**：① 奖励黑客页误把 `[[对齐税]]` 写成 wikilink（该节点不存在）→ 改为 `待建：对齐税`；② 该页"一个早期实例"一节是纯散文 L2（缺 bullets/表格/L3）→ 补三点评述。
+- **来源**：12 条全部 HTTP 200 且抓正文核验（Nature 590 / arXiv 2004.12919 / Uber 官方解读 / Wikipedia Reward hacking·Goodhart·Exploration–exploitation·MAB / 中文维基 TAS竞速 / TASVideos / libTAS / DeepMind）。
+- maturity 分布：25 evergreen / **133** growing / 112 seed（新增 4 个 growing）。
+- 全库 lint 为 0 errors / 0 warnings / 0 info。
