@@ -701,3 +701,24 @@
 - 修复：DQN「核心机制」L2 lead
 - 日期按系统时间 2026-10-06，review_due 按年 2027-10-06
 - lint：0 error / 0 warning / 0 info
+
+## [2026-10-07] sync | 拉取另一 agent 的 RL/模仿学习批次（4 commits）
+
+- 本地落后 4 个提交（`d9068ad` → `4689b3d`，提交日期 2026-10-06，署名 Damon Long）。工作区干净，`git pull --ff-only` 无冲突。
+- 引入 **9 个新节点**（均 `Cognition/Model`，`growing` / `confidence: high`）：Q-learning、DQN、DDQN、经验回放、优先经验回放、行为克隆、示范学习、逆强化学习、生成对抗网络；另修改 2 个既有节点（[[强化学习]]、[[贝尔曼方程]]）。
+- 对方流程合规：先在 log 中查重（记录"强化学习页已存在，无需新建"），用真实双链替换各自页面的「待建」，并通过 maintain 提交补入链消除 no-inbound。
+- **独立验证**：9 个新节点全部有入链（DDQN 6 个页面引用、示范学习 4 个、DQN 4 个，其余 2–3 个），无孤儿；lint 0/0/0。
+- 与本批次无交集：对方只动 `Cognition/Model/`，未触及 `Culture/` 或本轮新建的 [[道德地位]]／[[人格]]。
+- 全库规模：概念节点 262。
+
+## [2026-10-07] promote | 强化学习 / 贝尔曼方程 seed → growing（含一次实质复核）
+
+- **触发**：两页已分别有 17 / 15 条出链、入链来自 6+ 个页面，却仍是 `maturity: seed`（定义为"刚捕获，结构或来源可能不完整"），会让复核队列失真。
+- 按 SCHEMA §8.3 先做 Review（查来源可访问性、关键论断），再做 maturity 调整：
+  - **[[贝尔曼方程]] 复核通过**：CS234 Lecture 2 正文逐一支撑本页论断——矩阵形式 **V = R + γPV**、**压缩算子**定义、**价值迭代收敛条件**（γ<1 或以概率 1 进入终止态）、**不动点**（policy evaluation 即求 $B_\pi$ 的不动点）。
+  - **[[强化学习]] 复核发现一处缺口并修复**：第三节「奖励与任务成功的边界」原引来源（Spinning Up: Key Concepts）**未覆盖该论断**。已补 **DeepMind〈Specification gaming: the flip side of AI ingenuity〉**（Krakovna 等）——该文正文明确给出 RL agent 会找捷径取得大量奖励、而不完成任务原意的表述。
+  - **数值复算**（两页均通过）：强化学习的两步任务 A = 2、B = 0.9 × 3 = 2.7；贝尔曼方程的不动点 $V = 1/(1-0.9) = 10$、迭代 $V_0,V_1,V_2 = 0,1,1.9$。
+- 两页 `maturity` → **growing**；`updated` / `verified` → 2026-10-07；`review_due` → 2027-10-07；各补一条 **变更记录** 并写明「后续待补」（强化学习：「探索／利用」一条未能在现引来源中定位，待补一手来源）。
+- 新增来源 1 条（DeepMind specification gaming），抓正文核验。
+- maturity 分布：**25 evergreen / 129 growing / 112 seed**。
+- 全库 lint 为 0 errors / 0 warnings / 0 info。
