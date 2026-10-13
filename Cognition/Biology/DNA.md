@@ -96,7 +96,7 @@ DNA 与 RNA 也不同：前者含脱氧核糖、常见碱基包括 T，后者含
 ## 变更记录
 
 - 2026-09-11：补充与核苷酸、RNA、遗传密码和蛋白质的双向关系链接。
-
+- 相关：[[逆转录]] — 经 RNA → DNA 方向合成 DNA（产物 cDNA）；与转录方向相反
 ## 参考资料
 
 - [NHGRI：Deoxyribonucleic Acid (DNA)](https://www.genome.gov/genetics-glossary/Deoxyribonucleic-Acid-DNA) — DNA 的组成、碱基序列与遗传信息

@@ -83,7 +83,7 @@ DNA、RNA 和蛋白质使用不同的化学字母表与连接方式。RNA 序列
 - 相关：[[酶]] — 某些折叠 RNA 具有催化功能
 - 相关：[[核糖体]] — mRNA 为核糖体提供密码子序列
 - 相关：[[基因表达]] — 非编码 RNA 也可以是基因表达的最终功能产物
-
+- 相关：[[逆转录]] — 以 RNA 为模板合成 DNA 的额外传递路径（产物为 cDNA）
 ## 参考资料
 
 - [NHGRI：Ribonucleic Acid (RNA)](https://www.genome.gov/genetics-glossary/Ribonucleic-Acid-RNA?id=180) — RNA 的结构、常见类型、调控作用和 RNA 基因组
