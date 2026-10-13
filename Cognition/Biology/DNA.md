@@ -91,6 +91,7 @@ DNA 与 RNA 也不同：前者含脱氧核糖、常见碱基包括 T，后者含
 - 相关：[[糖苷键]] — DNA 中糖与碱基的连接属于核苷相关的糖苷连接，但 DNA 主链仍是磷酸二酯键
 - 相关：[[基因表达]] — DNA 序列通常承载细胞基因组中的表达信息
 - 相关：[[DNA复制]] — DNA 双链的碱基序列提供复制模板
+- [[raw/human_ai_knowledge/nucleotide-to-cell-seven-concepts.md]] | [🌐 HTML](https://wolfhawkld.github.io/human_ai_knowledge/nucleotide-to-cell-seven-concepts.html) — 人机知识《从核苷酸到细胞：七个概念的区别与联系》：按五层（单体／聚合物／信息／机器／容器）切开这七个概念，含 3 核苷酸=1 密码子=1 氨基酸 的换算与中心法则的例外（Nemesis, 2026-10-13）（本页是其上层概念）
 
 ## 变更记录
 
